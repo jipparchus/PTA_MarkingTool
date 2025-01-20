@@ -7,7 +7,7 @@ import markdown
 from urllib.parse import quote
 
 app = Flask(__name__)
-path_sub = os.path.join(os.getenv('HOME'), 'Documents', 'PTA', 'PHY1031', 'Submissions')
+path_sub, _ = read_config()
 
 template_head = """
 **Well done all who submitted the homework!!**
