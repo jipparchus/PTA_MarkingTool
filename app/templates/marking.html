@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - {{ super() }}{% endblock %}
+
+{% block content %}
+
+<div class="all">
+    <form action="?" method="POST">
+        <div class="c">
+            <top_ctrl class="h_split">
+                <p>
+                    Term <input class="usrinput" type="number" min=1 placeholder=1 size="1" value="{{ term | default('1') }}" name="term" /> Home Work #<input class="usrinput" type="number" min=1 placeholder=1 size="1" value="{{ hw | default('1') }}" name="hw"/>
+                    <input class="usrinput btn green" type="submit" value="confirm" formaction="/confirm_setups" />
+                </p>
+                {{ message }}
+            </top_ctrl>
+        </div>
+
+        <div class="c">
+            <v_split_wide_short class="v_split wide vshort">
+                <h2>Marks</h2>
+                Please save the marksheet before loading a new marksheet! Click 'confirm' then start editing the marks.
+                <p>
+                    <select class="usrinput" name="sub_id_selected" style="width: 220px;">
+                        {% for sub in sub_ids %}
+                            <option value="{{ sub.value }}" {% if sub.selected %} selected {% endif %}>
+                                {{ sub.value }}
+                            </option>
+                        {% endfor %}
+                    </select>
+        
+                    <select class="usrinput" name="point_selected" style="width: 220px;">
+                        {% for point in points %}
+                            <option value="{{ point.value }}" {% if point.selected %} selected {% endif %}>
+                                {{ point.value }}
+                            </option>
+                        {% endfor %}
+                    </select>
+        
+                    <input class="usrinput" type="number" min=0 max=100 name="mark_int" value="{{ mark_int | default('0') }}"/>
+                    .
+                    <input class="usrinput" type="number" min=0 max=9 name="mark_dec" value="{{ mark_dec | default('0') }}"/>
+        
+                    <input class="usrinput btn" type="submit" value="give a mark" formaction="/give_mark" />
+                </p>
+            </v_split_wide_short>
+        </div>
+        <div class="c">
+            <v_split_wide class="v_split wide">
+                <div>
+                    {{ df_ms | safe }}
+                </div>
+            </v_split_wide>
+        </div>
+
+        <div class="c">
+            <feedback class="h_split">
+                <h2>Feedcbacks</h2>
+                Change lines twice (hit Entre-key twice) between feedbacks. '\n\n' will be replaced by '///'
+        
+                <p>
+                    <input class="usrinput btn" type="submit" value="Load Feedback" formaction="/load_feedback" />
+                    <input class="usrinput btn" type="submit" value="Add Feedback" formaction="/add_feedback" />
+                </p>
+        
+                <p>
+                    <textarea class="usrinput" name="feedback" cols="80" rows="15">{{feedback}}</textarea>
+                </p>
+        
+            </feedback>
+            
+            <bottom_ctrl class="h_split">
+                {% for fk in feedback_collection %}
+                    <input class="usrinput btn" type="submit" value="{{fk}}" formaction="?" name="fk" />
+                {% endfor %}
+                <p>
+                    <input class="usrinput btn red" type="submit" value="Save Marksheet" formaction="/save_marksheet" />
+                </p>
+            </bottom_ctrl>
+        </div>
+        
+    </form>
+</div>
+
+
+{% endblock %}

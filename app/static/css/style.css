@@ -1,0 +1,185 @@
+/* https://blog.frankul.net/2022/10/07/button/ */
+
+:root {
+  --white: #fff;
+  --black: #1a1a1a;
+  --background: #c4c4c4;
+  --gray: #daddd9;
+  --control: #7cad6942;
+  --head: #24500b60;
+  --navy: #191970;
+  --navy_dark: #0c0c38;
+  --yellow: #fff100;
+  --red: #ff0000;
+  --blue: #1900ff;
+  --blue_dark: #1300c2;
+  --green: #1c7019;
+  --fullwidth: 2000px;
+}
+
+.body{
+  background-color: var(--background);
+  font-size: 18px;
+  font-family: "Roboto", sans-serif;
+  color: var(--navy_dark);
+}
+
+.usrinput{
+  background-color: var(--gray);
+  border: solid 2px var(--navy);
+  color: var(--navy);
+  border-radius: 10px;
+  padding: 5px 15px;
+  text-decoration: none;
+  font-size: 1em;
+  display: inline-block;
+  transition: .1s;
+}
+
+.usrinput.btn {
+  box-shadow: 0 5px 0 var(--navy);
+}
+.usrinput.btn:hover {
+  color: var(--navy);
+  transform: translateY(5px);
+  box-shadow: 0 0 0 var(--navy);
+}
+
+.usrinput.btn.green {
+    border: solid 2px var(--green);
+    color: var(--green);
+    box-shadow: 0 5px 0 var(--green);
+  }
+.usrinput.btn.green:hover {
+    color: var(--green);
+    box-shadow: 0 0 0 var(--green);
+  }
+
+.usrinput.btn.red {
+    border: solid 2px var(--red);
+    color: var(--red);
+    box-shadow: 0 5px 0 var(--red);
+  }
+.usrinput.btn.red:hover {
+    color: var(--red);
+    box-shadow: 0 0 0 var(--red);
+  }
+
+
+.all{
+    width: var(--fullwidth);
+    margin: 0 auto;
+  }
+h1{
+  margin-top: 0;
+}
+.header{
+  margin: 0 auto;
+  padding: 0 4%;
+  background-color: var(--head);
+  outline-color: var(--black);
+  outline-style: solid;
+  outline-width: 1px;
+}
+.h_split{
+  float: left;
+  width: 100%;
+  margin: 0 auto;
+  padding: 10px;
+  background-color: var(--control);
+}
+.h_split.foot{
+  background-color:var(--head);
+}
+.v_split{
+  width: 50%;
+  height: 600px;
+  margin: 0 auto;
+  padding: 10px;
+  background-color: var(--background);
+  overflow-y: scroll;
+}
+.v_split.wide{
+  width: 100%;
+}
+.v_split.short{
+  height: 300px;
+}
+.v_split.vshort{
+  height: 160px;
+}
+.v_split.tall{
+  height: 1000px;
+}
+
+.tab-nav ul{
+  text-align: center;
+  margin-bottom: 10px;
+  padding: 0px 15px;
+}
+
+.tab-nav ul li{
+  letter-spacing: normal;
+  display: inline-block;
+  width: calc(100%/4);
+}
+
+.tab-nav ul li p{
+  border-radius: 10px;
+  padding: 0px 0px;
+  outline-color: var(--navy_dark);
+  outline-style: solid;
+  outline-width: 3px;
+}
+
+.tab-nav ul li p a{
+  font-size: 22px;
+  display: block;
+  position: relative;
+  text-transform: none;
+  color: var(--navy_dark);
+  text-decoration: none;
+}
+
+.tab-nav ul li p.current{
+  outline-color: var(--navy_dark);
+  outline-width: 5px;
+}
+
+.tab-nav ul li p a.current{
+  font-weight: bold;
+  font-size: 25px;
+  color: var(--navy_dark);
+}
+.tab-nav ul li p:hover{
+  outline-width: 5px;
+}
+
+.tab-nav ul li p a:hover{
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.tab-nav ul li p:active{
+  outline-color: var(--black);
+  outline-width: 5px;
+}
+
+
+.tab-nav ul li p a:active{
+  color: var(--black);
+}
+
+.c{
+  display: flex;
+  margin: 0 auto;
+  gap: 3px;
+  overflow: hidden;
+  outline-color: var(--black);
+  outline-style: solid;
+  outline-width: 1px;
+}
+
+.logo{
+  margin: 20px 0px 0px 0px;
+}
