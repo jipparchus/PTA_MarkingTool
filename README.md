@@ -1,6 +1,23 @@
 # PTA_MarkingTool
 A tool to speed-up marking &amp; to generate markdown summary feedback for each submission
 
+
+**Expected Filing System**
+
+/xxx/yyy/Submissions
+|_T1HW1
+|_T1HW2
+	|_submission_id1
+		|_File submissions
+			|_ xxx.ipynb
+	|_submission_id2
+	|_submission_id3
+|_checkpoints.csv
+|_good_programming_practice.csv
+|_T1HW1_marksheet.csv
+|_T1HW2_marksheet.csv
+
+
 **Dependency**
 - numpy
 - pandas
