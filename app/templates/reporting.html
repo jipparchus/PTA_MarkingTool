@@ -14,7 +14,7 @@
                 </p>
 
                 <p>
-                    <select class="usrinput" name="sub_id_selected" style="width: 220px;">
+                    <select class="usrinput selection" name="sub_id_selected" style="width: 220px;">
                         {% for sub in sub_ids %}
                             <option value="{{ sub.value }}" {% if sub.selected %} selected {% endif %}>
                                 {{ sub.value }}

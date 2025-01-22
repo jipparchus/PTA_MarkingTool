@@ -20,6 +20,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // var selected = document.querySelector('[selected=""]');
+    // selected.classList.add('highlight_row')
+
+    // console.log(selected)
+
     // For table highlight
     // Dropdown selectors
     var select_id = document.getElementsByName( "sub_id_selected" )[0];
@@ -27,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Tables
     var tables = document.querySelectorAll(".dataframe");
     
-    select_id.addEventListener('change', () => {
+    select_id.addEventListener('click', () => {
         const id_selected = select_id.selectedOptions[0];
         console.log(id_selected);
         // Highlight the row with the selected submission id
@@ -53,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
-    select_cp.addEventListener('change', () => {
+    select_cp.addEventListener('click', () => {
         const cp_selected = select_cp.selectedOptions[0];
         console.log(cp_selected);
         // Highlight the row with the selected checkpoint

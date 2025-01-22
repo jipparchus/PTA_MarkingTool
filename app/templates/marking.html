@@ -21,7 +21,7 @@
                 <h2>Marks</h2>
                 Please save the marksheet before loading a new marksheet! Click 'confirm' then start editing the marks.
                 <p>
-                    <select class="usrinput" name="sub_id_selected" style="width: 220px;">
+                    <select class="usrinput selection" name="sub_id_selected" style="width: 220px;">
                         {% for sub in sub_ids %}
                             <option value="{{ sub.value }}" {% if sub.selected %} selected {% endif %}>
                                 {{ sub.value }}
@@ -29,7 +29,7 @@
                         {% endfor %}
                     </select>
         
-                    <select class="usrinput" name="point_selected" style="width: 500px;">
+                    <select class="usrinput selection" name="point_selected" style="width: 500px;">
                         {% for point in points %}
                             <option value="{{ point.value }}" {% if point.selected %} selected {% endif %}>
                                 {{ point.value }}

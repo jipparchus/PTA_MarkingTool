@@ -70,6 +70,9 @@
     box-shadow: 0 0 0 var(--red);
   }
 
+.usrinput.selection option {
+    background: var(--background);
+}
 
 .all{
     width: var(--w_full);
