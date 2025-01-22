@@ -209,7 +209,7 @@ Marksheet page
 @app.route('/marking')
 def marking():
     config = read_config()
-    path_sub, assessor = config['path_submission'], config['assessor']
+    path_sub, assessor, template_common = config['path_submission'], config['assessor'], config['template_common_mistake']
     # GET only
     attrs = ['term', 'hw', 'sub_ids_str', 'sub_id_selected', 'points_str', 'point_selected', 'message', 'feedback', 'feedback_collection']
     term, hw, sub_ids_str, sub_id_selected, points_str, point_selected, message, feedback, feedback_collection = get_form_info(attrs, 'args_get')
@@ -236,6 +236,7 @@ def marking():
         message=message,
         feedback=feedback,
         feedback_collection=lis_feedbacks,
+        template_common=template_common,
         path_sub=path_sub,
         assessor=assessor,
     )
@@ -244,7 +245,8 @@ def marking():
 @ app.route('/confirm_setups', methods=['POST'])
 def confirm_setups():
     load_mc()
-    path_sub = read_config()['path_submission']
+    config = read_config()
+    path_sub, template_common = config['path_submission'], config['template_common_mistake']
     attrs = ['term', 'hw', 'sub_id_selected', 'feedback_collection']
     term, hw, sub_id_selected, feedback_collection = get_form_info(attrs, feedback_collection=['feedback 1', 'feedback 2'])
 
@@ -269,7 +271,8 @@ def confirm_setups():
         points_str=points_str,
         sub_id_selected=sub_id_selected,
         message=message,
-        feedback_collection=feedback_collection_str
+        feedback_collection=feedback_collection_str,
+        template_common=template_common,
     ))
 
 
@@ -289,6 +292,10 @@ def give_mark():
     if mark > float(fullmark):
         mark = np.nan
     ms.df_ms.at[sub_id_selected, point_selected] = mark
+
+    #  --------- !!!! Should not the marksheet be saved to csv everytime when a mark is added ?????? !!!! --------------------------
+    # Make a function to load all the user input info on the form
+
     return redirect(url_for(
         'marking',
         term=term,
@@ -302,6 +309,7 @@ def give_mark():
 
 @ app.route('/save_marksheet', methods=['POST'])
 def save_marksheet():
+    #  --------- !!!! Is this necessary??? !!!! --------------------------
     path_sub = read_config()['path_submission']
     attrs = ['term', 'hw', 'sub_id_selected', 'point_selected']
     term, hw, sub_id_selected, point_selected = get_form_info(attrs)
@@ -362,6 +370,7 @@ def add_feedback():
 
     # Edit feedbacks for the selected submission
     if feedback is not None:
+        # --------- !!!! make a func that simply save the feedback to be used in other function, too !!!! --------------------------
         feedback = re.sub(r'(\r\n|\r|\n){2}', '///', feedback)
         ms.df_ms.at[sub_id_selected, 'Feedback'] = feedback
     message = f'Saved: Feedback for submission by {sub_id_selected} for homework T{term}HW{hw}'
@@ -377,6 +386,34 @@ def add_feedback():
         point_selected=point_selected
     ))
 
+
+@ app.route('/save_common_mistakes', methods=['POST'])
+def save_common_mistakes():
+    path_sub = read_config()['path_submission']
+    attrs = ['term', 'hw', 'sub_id_selected', 'point_selected', 'feedback', 'template_common']
+    term, hw, sub_id_selected, point_selected, feedback, template_common = get_form_info(attrs)
+
+    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
+    sub_ids = get_folders(path_full)
+    sub_ids_str, points_str = list2string_routine(sub_ids, ms)
+
+    write_config(**{'template_common_mistake': template_common})
+    message = f'Saved: Common Mistakes for homework T{term}HW{hw}'
+
+    # --------- !!!! Should or should not save the mark and feedback at the same time ?????? !!!! --------------------------
+
+    return redirect(url_for(
+        'marking',
+        term=term,
+        hw=hw,
+        message=message,
+        feedback=feedback,
+        sub_ids_str=sub_ids_str,
+        sub_id_selected=sub_id_selected,
+        points_str=points_str,
+        point_selected=point_selected,
+        template_common=template_common
+    ))
 
 # Feedback collection bottuns, implement
 
@@ -480,13 +517,48 @@ def confirm_sub_id():
     ))
 
 
+@app.route('/update_template_head', methods=['POST'])
+def update_template_head():
+    attrs = ['term', 'hw', 'sub_id_selected', 'template_head']
+    term, hw, sub_id_selected, template_head = get_form_info(attrs)
+
+    path_sub = read_config()['path_submission']
+    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
+    ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
+    try:
+        message = path_full
+        sub_ids = get_folders(path_full)
+    except FileNotFoundError:
+        sub_ids = ['submission 1', 'submission 2', 'submission 3', 'etc.']
+        message = '!! FileNotFound !!'
+    # Load the marksheet for the particular homework (identified by 'term' and 'hw')
+    ms.get_marksheet(term, hw, sub_ids)
+    sub_ids_str, points_str = list2string_routine(sub_ids, ms)
+
+    write_config(**{'template_head': template_head})
+
+    return redirect(url_for(
+        'reporting',
+        term=term,
+        hw=hw,
+        sub_ids_str=sub_ids_str,
+        points_str=points_str,
+        sub_id_selected=sub_id_selected,
+        message=message,
+        template_head=template_head,
+    ))
+
+
 @ app.route('/generate', methods=['POST'])
 def generate():
     load_mc()
     config = read_config()
-    path_sub, assessor = config['path_submission'], config['assessor']
-    attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'template_common']
-    term, hw, sub_id_selected, template_head, template_common = get_form_info(attrs)
+    path_sub, assessor, template_common = config['path_submission'], config['assessor'], config['template_common_mistake']
+
+    # attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'template_common']
+    # term, hw, sub_id_selected, template_head, template_common = get_form_info(attrs)
+    attrs = ['term', 'hw', 'sub_id_selected', 'template_head']
+    term, hw, sub_id_selected, template_head = get_form_info(attrs)
 
     path_full = os.path.join(path_sub, f'T{term}HW{hw}')
     ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
