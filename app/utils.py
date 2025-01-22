@@ -60,7 +60,6 @@ def df_scrollable(df):
     for i in {'NaN', 'nan', f'__{col.lower()}__'}:
         str_html = str_html.replace(str(i), '')
     str_html = str_html.replace('nan', '')
-    print(str_html)
     return str_html
 
 
