@@ -7,7 +7,7 @@ import markdown
 from urllib.parse import quote
 
 app = Flask(__name__)
-path_sub, _ = read_config()
+path_sub = read_config()['path_submission']
 
 template_head = """
 **Well done all who submitted the homework!!**
@@ -55,7 +55,7 @@ done
 
 
 def load_mc():
-    path_sub, _ = read_config()
+    path_sub = read_config()['path_submission']
     global mc, ms
     mc = MarkingCriteria(path_sub)
     ms = MarkSheet(path_sub)
@@ -134,7 +134,8 @@ def get_form_info(attrs, mode='form_get', **kwargs):
 def path_assessor_change():
     attrs = ['path_sub', 'assessor']
     path_sub, assessor = get_form_info(attrs)
-    write_config(path_sub, assessor)
+    config2update = {'path_submission': path_sub, 'assessor': assessor}
+    write_config(**config2update)
     return redirect(url_for('mc_editing'))
 
 
@@ -145,7 +146,8 @@ Marking Criteria Editing Page (mc_editing)
 
 @app.route('/')
 def mc_editing():
-    path_sub, assessor = read_config()
+    config = read_config()
+    path_sub, assessor = config['path_submission'], config['assessor']
     # GET only
     attrs = ['term', 'hw', 'cps_idx', 'cps_txt', 'cps_mark', 'gpp_idx', 'gpp_txt', 'gpp_mark', 'message']
     term, hw, cps_idx, cps_txt, cps_mark, gpp_idx, gpp_txt, gpp_mark, message = get_form_info(attrs, 'args_get')
@@ -225,7 +227,7 @@ def gpp_del():
 
 @ app.route('/save', methods=['POST'])
 def save():
-    path_sub, _ = read_config()
+    path_sub = read_config()['path_submission']
     save_csv(mc.df_cps, mc.df_gpp, path_sub)
     load_mc()
     message = 'Marking Criteria has been saved!'
@@ -246,7 +248,8 @@ Marksheet page
 
 @app.route('/marking')
 def marking():
-    path_sub, assessor = read_config()
+    config = read_config()
+    path_sub, assessor = config['path_submission'], config['assessor']
     # GET only
     attrs = ['term', 'hw', 'sub_ids_str', 'sub_id_selected', 'points_str', 'point_selected', 'message', 'feedback', 'feedback_collection']
     term, hw, sub_ids_str, sub_id_selected, points_str, point_selected, message, feedback, feedback_collection = get_form_info(attrs, 'args_get')
@@ -281,7 +284,7 @@ def marking():
 @ app.route('/confirm_setups', methods=['POST'])
 def confirm_setups():
     load_mc()
-    path_sub, _ = read_config()
+    path_sub = read_config()['path_submission']
     attrs = ['term', 'hw', 'sub_id_selected', 'feedback_collection']
     term, hw, sub_id_selected, feedback_collection = get_form_info(attrs, feedback_collection=['feedback 1', 'feedback 2'])
 
@@ -312,7 +315,7 @@ def confirm_setups():
 
 @ app.route('/give_mark', methods=['POST'])
 def give_mark():
-    path_sub, _ = read_config()
+    path_sub = read_config()['path_submission']
     attrs = ['term', 'hw', 'sub_id_selected', 'point_selected', 'mark_int', 'mark_dec']
     term, hw, sub_id_selected, point_selected, mark_int, mark_dec = get_form_info(attrs)
 
@@ -339,7 +342,7 @@ def give_mark():
 
 @ app.route('/save_marksheet', methods=['POST'])
 def save_marksheet():
-    path_sub, _ = read_config()
+    path_sub = read_config()['path_submission']
     attrs = ['term', 'hw', 'sub_id_selected', 'point_selected']
     term, hw, sub_id_selected, point_selected = get_form_info(attrs)
 
@@ -363,7 +366,7 @@ def save_marksheet():
 
 @ app.route('/load_feedback', methods=['POST'])
 def load_feedback():
-    path_sub, _ = read_config()
+    path_sub = read_config()['path_submission']
     attrs = ['term', 'hw', 'sub_id_selected', 'point_selected', 'feedback']
     term, hw, sub_id_selected, point_selected, feedback = get_form_info(attrs)
 
@@ -389,7 +392,7 @@ def load_feedback():
 
 @ app.route('/add_feedback', methods=['POST'])
 def add_feedback():
-    path_sub, _ = read_config()
+    path_sub = read_config()['path_submission']
     attrs = ['term', 'hw', 'sub_id_selected', 'point_selected', 'feedback']
     term, hw, sub_id_selected, point_selected, feedback = get_form_info(attrs)
 
@@ -425,7 +428,8 @@ Report Generation Page
 
 @app.route('/reporting')
 def reporting():
-    path_sub, assessor = read_config()
+    config = read_config()
+    path_sub, assessor = config['path_submission'], config['assessor']
     # GET only
     attrs = ['term', 'hw', 'sub_ids_str', 'sub_id_selected', 'message', 'summary', 'template_head', 'template_common', 'cmd']
     term, hw, sub_ids_str, sub_id_selected, message, summary, template_head, template_common, cmd = get_form_info(attrs, 'args_get')
@@ -456,7 +460,7 @@ def reporting():
 
 @ app.route('/confirm_homework', methods=['POST'])
 def confirm_homework():
-    path_sub, _ = read_config()
+    path_sub = read_config()['path_submission']
     load_mc()
     attrs = ['term', 'hw', 'sub_id_selected']
     term, hw, sub_id_selected = get_form_info(attrs)
@@ -487,7 +491,7 @@ def confirm_homework():
 @ app.route('/confirm_sub_id', methods=['POST'])
 def confirm_sub_id():
     load_mc()
-    path_sub, _ = read_config()
+    path_sub = read_config()['path_submission']
     attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'template_common']
     term, hw, sub_id_selected, template_head, template_common = get_form_info(attrs)
 
@@ -519,7 +523,8 @@ def confirm_sub_id():
 @ app.route('/generate', methods=['POST'])
 def generate():
     load_mc()
-    path_sub, assessor = read_config()
+    config = read_config()
+    path_sub, assessor = config['path_submission'], config['assessor']
     attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'template_common']
     term, hw, sub_id_selected, template_head, template_common = get_form_info(attrs)
 

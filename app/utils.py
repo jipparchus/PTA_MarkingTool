@@ -11,17 +11,16 @@ def read_config():
         config = json.load(f)
         path = config['path_submission']
         if path == 'cwd':
-            path = os.getcwd()
-    return path, config['assessor']
+            config['path_submission'] = os.getcwd()
+    return config
 
 
-def write_config(path_new, assessor_new):
-    d = {
-        "path_submission": path_new,
-        "assessor": assessor_new
-    }
+def write_config(**config2update):
+    config_old = read_config()
+    # When the same key is in both dict, the second dict's value for the key is prioritised
+    config_new = {**config_old, **config2update}
     with open('./config.json', 'w') as f:
-        json.dump(d, f, indent=4)
+        json.dump(config_new, f, indent=4)
 
 
 def df_add_class_str(s):
