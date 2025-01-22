@@ -7,51 +7,11 @@ import markdown
 from urllib.parse import quote
 
 app = Flask(__name__)
-path_sub = read_config()['path_submission']
-
-template_head = """
-**Well done all who submitted the homework!!**
-
-* Code cells with `””” Added by Assessor “””` are attempts to correct minor mistakes (in this case, please check the differences between the original code) OR just the assessor comparing the values with model answer.
-"""
-template_common = """
-- N/A
-
-- N/A
-
-- N/A
-"""
-
-cmd = """
-## Convert to PDF from Jupyter Notebook
-
-```bash
-conda activate <conda_env>
-```
-
-```bash
-jupyter nbconvert --execute --to pdf --allow-errors xxx.ipynb
-```
-
-or if you are laazy to copy and paste the .ipynb file name, copy and paste the below in the same directory as the jupyter notebook file.
-
-```bash
-#!/bin/bash
-echo off
-# Convert .ipynb into .pdf under the current direc
-for f in *.ipynb; do
-    if [ -f "$f" ]; then
-        echo "Converting $f to PDF..."
-        jupyter nbconvert --execute --to pdf --allow-errors "$f"
-        if [ $? -ne 0 ]; then
-            echo "Error occurred while converting $f"
-        else
-            echo "Successfully converted $f to PDF"
-        fi
-    fi
-done
-```
-"""
+config = read_config()
+path_sub = config['path_submission']
+template_head = config['template_head']
+template_common = config['template_common_mistake']
+cmd = config['cmd_ipynb2pdf']
 
 
 def load_mc():

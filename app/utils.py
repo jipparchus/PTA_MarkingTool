@@ -17,6 +17,10 @@ def read_config():
 
 def write_config(**config2update):
     config_old = read_config()
+    print('/' * 100)
+    print(config_old)
+    print(config2update)
+    print('/' * 100)
     # When the same key is in both dict, the second dict's value for the key is prioritised
     config_new = {**config_old, **config2update}
     with open('./config.json', 'w') as f:
