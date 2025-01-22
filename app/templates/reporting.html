@@ -37,29 +37,24 @@
         </div>
 
         <div class="c">
-            <div class="v_split tall">
+            <div class="v_split tall non_scroll">
                 <h2>Report Template</h2>
                 <p>Head</p>
-                <div>
-                    <textarea class="usrinput" name="template_head" cols="75" rows="10">{{ template_head }}</textarea>
-                    <input class="usrinput btn green" type="submit" value="Update Template" formaction="/update_template_head" /> <input class="usrinput btn red" type="submit" value="Generate Report" formaction="/generate" />
-                </div>
-                <!-- <p>Common Mistakes</p>
-                <div>
-                    <textarea class="usrinput" name="template_common" cols="75" rows="7">{{ template_common }}</textarea>
-                </div> -->
-                <p>
-                    <textarea readonly class="usrinput" name="summary" cols="75" rows="50">{{ summary }}</textarea>
-                </p>
+                <textarea class="usrinput" name="template_head" cols="55" rows="9">{{ template_head }}</textarea>
+                <input class="usrinput btn green" type="submit" value="Update Template" formaction="/update_template_head" /> <input class="usrinput btn red" type="submit" value="Generate Report" formaction="/generate" />
                 <h2>.ipynb >>> .pdf</h2>
-                <p>
-                    <textarea readonly class="usrinput" name="cmd" cols="75" rows="30">{{ cmd }}</textarea>
-                </p>
+                <textarea readonly class="usrinput" name="cmd" cols="55" rows="27">{{ cmd }}</textarea>
             </div>
             <div class="v_split tall">
+                <h2>Markdown Report</h2>
                 <p>
-                    <h2>Report for Submission: {{ sub_id_selected }}</h2>
+                    {{ sub_id_selected }}
                 </p>
+                <textarea readonly class="usrinput" name="summary" cols="55" rows="42">{{ summary }}</textarea>
+
+            </div>
+            <div class="v_split tall">
+                <h2>Preview: </h2>
                 {{ summary_html | safe }}
             </div>
         </div>
