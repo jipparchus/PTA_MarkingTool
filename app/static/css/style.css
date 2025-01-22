@@ -10,7 +10,7 @@
   --head: #24500b60;
   --navy: #191970;
   --navy_dark: #0c0c38;
-  --yellow: #fff100;
+  --yellow: #fff20060;
   --red: #ff0000;
   --blue: #1900ff;
   --blue_dark: #1300c2;
@@ -230,6 +230,12 @@ h1{
   width: 100%;
   border-collapse:collapse;
   background-color: var(--gray);
+}
+.highlight_row {
+  background-color: var(--yellow);
+}
+.highlight_col {
+  background-color: var(--yellow);
 }
 .corner {
   background: var(--tablehead);
