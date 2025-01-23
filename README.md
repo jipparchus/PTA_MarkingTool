@@ -1,9 +1,8 @@
 # PTA_MarkingTool
-A tool to speed-up marking &amp; to generate markdown summary feedback for each submission
 
+A tool to $\color{red}{\textsf{speed up marking}}$ & to generate $\color{blue}{\textsf{markdown feedback}}$ for each submission.
 
 **Example Filing System**
-
 ```
 /.../coursework_marking
 ├── files_for_demonstrators
@@ -27,21 +26,39 @@ A tool to speed-up marking &amp; to generate markdown summary feedback for each 
 ```
 
 **Dependency**
-- numpy
-- pandas
-- flask
+- Python 3
+- Numpy
+- Pandas
+- Flask
 - markdown
 
 **Seting Up the App**
 
-1. Download the project to your local machine by 'Code' > 'Download ZIP'. Unzip the foilder
-2. Open terminal / command prompt and move to the folder location.
-3. Do `Python run.py`. If no error messages, 'ctrl' + 'click' the link apear on the terminal / command prompt.
-4. Make sure the path to the submission folders is correct.
+1. Download the project to your local machine by 'Code' > 'Download ZIP'. Unzip the folder
+2. Rename `config.json.defo` ➡️ `config.json`.
+3. Open terminal/command prompt and move to the folder location.
+4. Activate virtual environment if necessary, then `python run.py`.
+5. If no error messages, 'ctrl' + 'click' the link apear on the terminal/command prompt.
+6. Edit sure the path to the submission folders is correct.
+
+
+```bash
+(Env_MarkingTool) C:\Users\QQ\Documents\marking_demo\MarkingTool>python run.py
+ * Serving Flask app 'app.app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 126-070-293
+```
 
 **How to Use**
 
+	For the first run, edit the path to the submissions directory & assessor's initials. Click 'Save Change' to save the configurations.
+
 There are 3 tabs for the application.
-1. Marking c riteria editor page
+1. Marking criteria editor page
 2. Markingsheet editing page
 3. Markdown summary of marks and feedbacks generation page
