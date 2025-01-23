@@ -1,6 +1,17 @@
 # PTA_MarkingTool
 
-A tool to $\color{red}{\textsf{speed up marking}}$ & to generate $\color{blue}{\textsf{markdown feedback}}$ for each submission.
+A tool to $\color{red}{\textsf{speed up marking}}$ & to generate $\color{blue}{\textsf{markdown feedback}}$ for each submission. Designed to minimise the use of keyboard input. 
+
+
+**Known Issues**
+
+- Not enough README for how to use the app.
+- Order of the index in marking criteria is not assending, but just in the order of added timing.
+- When marking criteria is edited after marksheet is edited, some checkpoints disappears from the marksheet.
+- Want to reduce the number of buttons by using JavaScript
+- String \__feedback\__ added to modify html are left without being deleted sometimes.
+
+---
 
 **Example Filing System**
 ```
@@ -56,7 +67,7 @@ Press CTRL+C to quit
 
 **How to Use**
 
-	For the first run, edit the path to the submissions directory & assessor's initials. Click 'Save Change' to save the configurations.
+For the first run, edit the path to the submissions directory & assessor's initials. Click 'Save Change' to save the configurations.
 
 There are 3 tabs for the application.
 1. Marking criteria editor page
