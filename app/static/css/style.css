@@ -29,6 +29,31 @@
   color: var(--navy_dark);
 }
 
+/* Scroll bar */
+::-webkit-scrollbar {
+  background: var(--gray);
+  width: 16px;
+  height: 16px;
+  border-radius: 7px;
+}
+
+::-webkit-scrollbar-button{
+  background-color: var(--background);
+  border: 2px solid var(--head);
+  border-radius: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--head);
+  border: 2px solid var(--head);
+  border-radius: 7px;
+}
+
+::-webkit-resizer{
+  border: 10px solid var(--head);
+  border-radius: 1em;
+}
+
 .usrinput{
   background-color: var(--gray);
   border: solid 2px var(--navy);
@@ -208,11 +233,16 @@ h1{
   outline: 2px var(--red);
 }
 
-.sticky_cols::-webkit-scrollbar {
-  background: var(--yellow);
+/* Scroll bar */
+::-webkit-scrollbar {
+  background: var(--gray);
   width: 15px;
   height: 15px;
   border-radius: 20px;
+}
+
+::-webkit-scrollbar-button{
+  border: 6px solid var(--control);
 }
 
 .sticky_cols thead th {
