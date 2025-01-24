@@ -66,16 +66,16 @@ For the first run, edit the path to the submissions directory & assessor's initi
 
 There are 3 tabs for the application.
 1. Marking criteria editor page
-2. 
+
 <video src="https://github.com/user-attachments/assets/1f203d72-21be-4a5b-8e34-61482fb627e2" controls playsinline autoplay loop muted width="500"></video>
 
-3. Markingsheet editing page
+2. Markingsheet editing page
 
 
 <video src="https://github.com/user-attachments/assets/c1e0ff15-0e6e-4827-b0bd-4482e49a38f7" controls playsinline autoplay loop muted width="500"></video>
 
 
-5. Markdown summary of marks and feedbacks generation page
+3. Markdown summary of marks and feedbacks generation page
 
 
 
