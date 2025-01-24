@@ -1,7 +1,7 @@
 # PTA_MarkingTool
 
 
-A tool to $\color{red}{\textsf{speed up marking}}$ & to generate $\color{blue}{\textsf{markdown feedback}}$ for each submission. Designed to minimise the use of keyboard input. 
+A tool to $\color{red}{\textsf{speed up marking}}$ & to generate $\color{blue}{\textsf{summary feedback report}}$ for each submission. 
 
 <h2>Motivations</h2>
 
@@ -23,6 +23,14 @@ A marking tool that integrates:
 - Feedback report generator
 
 The application works locally. No internet connection is needed for security reasons.
+
+You will need to open only this application, the Jupyter Notebook submitted, and the marking instructions provided by the module leader.
+
+<h3>Points</h3>
+
+- This is designed to minimise the use of keyboard input because this makes the marking process smoother, personally.
+
+- The note-taking area for frequently seen mistakes is oriented in the mark sheet editing tab because they are found during marking, while the note is used to generate the report generation page. 
 
 
 <h2>How to Use</h2>
