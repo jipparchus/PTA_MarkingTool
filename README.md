@@ -77,7 +77,7 @@ There are 3 tabs for the application.
 
 3. Markdown summary of marks and feedbacks generation page
 
-
+<video src="https://github.com/user-attachments/assets/0540702e-4f1f-4cbe-aa40-3c9acc24e848" controls playsinline autoplay loop muted width="500"></video>
 
 <h2>Other Information</h2>
 
