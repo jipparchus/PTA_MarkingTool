@@ -281,7 +281,6 @@ def generate_summary(submission_id, df_marksheet, term, hw, marking_criteria, as
         gpp_mean = float(Decimal(str(gpp_mean)).quantize(Decimal('0.1'), ROUND_HALF_UP))
         # Round the total mark to 1st d.p.
         mark_total = float(Decimal(str(subtotal + gpp_mean)).quantize(Decimal('0.1'), ROUND_HALF_UP))
-        full_mark_overall = 20
 
         '''
         3. Generate the markdown script for feedback, tables of marks in each section
@@ -322,5 +321,6 @@ def generate_summary(submission_id, df_marksheet, term, hw, marking_criteria, as
         table_gpp += f"|\\textcolor{{blue}}{{Average}}|\\textcolor{{blue}}{{{gpp_mean} / {int(sum(list_gpp_fullmark) / len(list_gpp_fullmark))}}}|"
 
         markdown = feedback + table_cp + '\n\n' + table_gpp
+        full_mark_overall = sum(list_gpp_fullmark) / len(list_gpp_fullmark) + sum(list_cp_fullmark)
         markdown += f'\n\n**Total \\textcolor{{red}}{{{mark_total} / {full_mark_overall}}}**\n\n(Assessor: {assessor})'
         return markdown
