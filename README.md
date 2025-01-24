@@ -69,6 +69,8 @@ Press CTRL+C to quit
 
 For the first run, edit the path to the submissions directory & assessor's initials. Click 'Save Change' to save the configurations.
 
+![](./app/static/assets/demo2.gif)
+
 There are 3 tabs for the application.
 1. Marking criteria editor page
 2. Markingsheet editing page
