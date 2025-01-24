@@ -69,7 +69,10 @@ Press CTRL+C to quit
 
 For the first run, edit the path to the submissions directory & assessor's initials. Click 'Save Change' to save the configurations.
 
-<video src="./app/static/assets/demo1.mp4" controls playsinline autoplay loop muted="true" width="600"></video>
+<!-- <video src="./app/static/assets/demo1.mp4" controls playsinline autoplay loop muted="true" width="600"></video> -->
+
+<video src="app/static/assets/demo1.webm" controls playsinline autoplay loop muted width="600"></video>
+
 
 There are 3 tabs for the application.
 1. Marking criteria editor page
