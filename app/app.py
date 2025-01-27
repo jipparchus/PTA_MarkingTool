@@ -2,7 +2,7 @@ import os
 import numpy as np
 from flask import Flask, render_template, request, redirect, url_for
 import re
-from .utils import save_csv, get_folders, get_marks, MarkingCriteria, MarkSheet, generate_summary, string2list, list2string, list2string_routine, read_config, write_config, df_scrollable
+from .utils import save_csv, get_folders, get_marks, MarkingCriteria, MarkSheet, generate_summary, string2list, list2string, list2string_routine, read_config, write_config, df_scrollable, ipynb2pdf
 import markdown
 from urllib.parse import quote
 
@@ -478,7 +478,6 @@ def confirm_homework():
         term=term,
         hw=hw,
         sub_ids_str=sub_ids_str,
-        points_str=points_str,
         sub_id_selected=sub_id_selected,
         message=message,
     ))
@@ -508,7 +507,6 @@ def confirm_sub_id():
         term=term,
         hw=hw,
         sub_ids_str=sub_ids_str,
-        points_str=points_str,
         sub_id_selected=sub_id_selected,
         message=message,
         template_head=template_head,
@@ -541,14 +539,13 @@ def update_template_head():
         term=term,
         hw=hw,
         sub_ids_str=sub_ids_str,
-        points_str=points_str,
         sub_id_selected=sub_id_selected,
         message=message,
         template_head=template_head,
     ))
 
 
-@ app.route('/generate', methods=['POST'])
+@app.route('/generate', methods=['POST'])
 def generate():
     load_mc()
     config = read_config()
@@ -578,12 +575,42 @@ def generate():
         term=term,
         hw=hw,
         sub_ids_str=sub_ids_str,
-        points_str=points_str,
         sub_id_selected=sub_id_selected,
         message=message,
         template_head=template_head,
         template_common=template_common,
         summary=summary,
+    ))
+
+
+@app.route('/ipynb2pdf', methods=['POST'])
+def ipynb2pdf_all():
+    attrs = ['term', 'hw', 'sub_id_selected', 'template_head']
+    term, hw, sub_id_selected, template_head = get_form_info(attrs)
+
+    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
+    ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
+    try:
+        sub_ids = get_folders(path_full)
+    except FileNotFoundError:
+        sub_ids = ['submission 1', 'submission 2', 'submission 3', 'etc.']
+    # Load the marksheet for the particular homework (identified by 'term' and 'hw')
+    ms.get_marksheet(term, hw, sub_ids)
+    sub_ids_str, points_str = list2string_routine(sub_ids, ms)
+
+    # Converting the files. Somehow need to output messages...
+    ipynb2pdf(term, hw)
+
+    return redirect(url_for(
+        'reporting',
+        term=term,
+        hw=hw,
+        sub_ids_str=sub_ids_str,
+        sub_id_selected=sub_id_selected,
+        message='.ipynb files have been  converted to .pdf',
+        template_head=template_head,
+        template_common=template_common,
+        summary='',
     ))
 
 
