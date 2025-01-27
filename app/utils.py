@@ -45,21 +45,21 @@ def df_scrollable(df):
     Returns:
         HTML
     """
+    _df = df.copy()
     col = 'Feedback'
-    if col in df.columns:
-        df[col] = df[col].apply(df_add_class_str)
+    if col in _df.columns:
+        _df[col] = _df[col].apply(df_add_class_str)
         str_html = ''
-        html_lines = list(map(lambda line: line.replace(f'<td>__{col.lower()}__', f'<td>\n<div class="{col.lower()}">').replace('</td>', '</div>\n</td>') if '__feedback__' in line else line, df.to_html().split('\n')))
+        html_lines = list(map(lambda line: line.replace(f'<td>__{col.lower()}__', f'<td>\n<div class="{col.lower()}">').replace('</td>', '</div>\n</td>') if f'__{col.lower()}__' in line else line, _df.to_html().split('\n')))
         for line in html_lines:
             str_html += line + '\n'
     else:
-        str_html = df.to_html()
+        str_html = _df.to_html()
     # "corner" class for highest 'z-index'
     str_html = str_html.replace('<th></th>', '<th class="corner" style="z-index: 2;position: sticky;top: 0px;left: 0px;"></th>')
     # Remove unnecessary strings
     for i in {'NaN', 'nan', f'__{col.lower()}__'}:
-        str_html = str_html.replace(str(i), '')
-    str_html = str_html.replace('nan', '')
+        str_html = str_html.replace(i, '')
     return str_html
 
 
@@ -202,6 +202,7 @@ class MarkSheet(MarkingCriteria):
             ]
             cols = lis_cps + lis_gpp + ['Feedback']
             self.df_ms = pd.DataFrame(columns=cols, index=sub_ids)
+            self.df_ms['Feedback'] = ''
         else:
             self.d_ms = load_csv(self._path_marksheet, mode='marksheet')
 

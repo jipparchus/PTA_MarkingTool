@@ -45,7 +45,7 @@ def get_form_info(attrs, mode='form_get', **kwargs):
     defo_sub_id_selected = kwargs.pop('sub_id_selected', 'submission id')
     defo_point_selected = kwargs.pop('point_selected', 'checkpoint [mark]')
     defo_message = kwargs.pop('message', 'No Messages')
-    defo_feedback = kwargs.pop('feedback', None)
+    defo_feedback = kwargs.pop('feedback', '')
     defo_feedback_collection = kwargs.pop('feedback_collection', 'feedback 1:::feedback 2')
     defo_mark_int = kwargs.pop('mark_int', '0')
     defo_mark_dec = kwargs.pop('mark_dec', '0')
@@ -221,9 +221,8 @@ def marking():
     sub_ids_with_selection = [{'value': id, 'selected': id == sub_id_selected} for id in lis_sub_ids]
     points_with_selection = [{'value': point, 'selected': point == point_selected} for point in lis_points]
     # Replace the splitter (///) by '\n\n'
-    if feedback is not None:
+    if feedback != '':
         feedback = feedback.replace('///', '\n\n')
-
     return render_template(
         'marking.html',
         term=term,
@@ -369,10 +368,10 @@ def add_feedback():
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
     # Edit feedbacks for the selected submission
-    if feedback is not None:
-        # --------- !!!! make a func that simply save the feedback to be used in other function, too !!!! --------------------------
-        feedback = re.sub(r'(\r\n|\r|\n){2}', '///', feedback)
-        ms.df_ms.at[sub_id_selected, 'Feedback'] = feedback
+    # if feedback != '':
+    # --------- !!!! make a func that simply save the feedback to be used in other function, too !!!! --------------------------
+    feedback = re.sub(r'(\r\n|\r|\n){2}', '///', feedback)
+    ms.df_ms.at[sub_id_selected, 'Feedback'] = feedback
     message = f'Saved: Feedback for submission by {sub_id_selected} for homework T{term}HW{hw}'
     return redirect(url_for(
         'marking',
