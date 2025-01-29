@@ -69,7 +69,7 @@ There are 3 tabs for the application.
 
 <video src="https://github.com/user-attachments/assets/1f203d72-21be-4a5b-8e34-61482fb627e2" controls playsinline autoplay loop muted width="500"></video>
 
-2. Markingsheet editing page
+2. Markingsheet editing page ("__ feedback __" bug removed)
 
 
 <video src="https://github.com/user-attachments/assets/c1e0ff15-0e6e-4827-b0bd-4482e49a38f7" controls playsinline autoplay loop muted width="500"></video>
@@ -126,4 +126,4 @@ So far, the application does the minimum job and is planned to be shared with my
 The order of the index in marking criteria is not ascending but just in the order of added timing.
 - When marking criteria are edited after the mark sheet is edited, some checkpoints disappear from the mark sheet.
 - Want to reduce the number of buttons by using JavaScript
-- String \__feedback\__ added to modify HTML is left inside the feedback text without being deleted sometimes.
+
