@@ -69,13 +69,19 @@ There are 3 tabs for the application.
 
 <video src="https://github.com/user-attachments/assets/1f203d72-21be-4a5b-8e34-61482fb627e2" controls playsinline autoplay loop muted width="500"></video>
 
-2. Markingsheet editing page ("__ feedback __" bug removed)
+2. Markingsheet editing page **(✅"\_\_feedback\_\_" bug has been removed )**
 
+Feedbacks will be shown with bullet points by default. Please change lines twice between feedbacks. The same rules apply for the 'Common Mistakes' section. You can leave the section empty if there is nothing to mention.
 
 <video src="https://github.com/user-attachments/assets/c1e0ff15-0e6e-4827-b0bd-4482e49a38f7" controls playsinline autoplay loop muted width="500"></video>
 
 
-3. Markdown summary of marks and feedbacks generation page
+3. Summary of marks and feedbacks generation page **(✅"\_\_feedback\_\_" bug has been removed )**
+
+- Select a homework, confirm the submission OD, then press 'Generate Report' to generate a markdown report. Please edit the template in anyways you like!
+- The syntax of markdown is just tested for my environment only. It is expected that the syntax for colour text may not work for your environment. Please try replace, e.g. `\textcolor{red}{ABC}` to `<font color='red'> ABC </font>` then convert the notebook to PDF to see if it works.
+- Copy the markdown report and paste that on the submitted .ipynb and convert to .pdf.
+- Conversion command of .ipynb to .pdf may not work for your environment.
 
 <video src="https://github.com/user-attachments/assets/0540702e-4f1f-4cbe-aa40-3c9acc24e848" controls playsinline autoplay loop muted width="500"></video>
 
@@ -91,6 +97,7 @@ There are 3 tabs for the application.
   - Numpy (conda)
   - Pandas (conda)
   - markdown (conda)
+  - flask-socketio (pip)
 - HTML
 - CSS
 - JavaScript
@@ -122,8 +129,9 @@ There are 3 tabs for the application.
 
 So far, the application does the minimum job and is planned to be shared with my colleagues.  
 
+- No need to name the homeworks as combination of "T (term)" and "HW (homework)". Just "HW" is enough.
 - There is not enough README to show how to use the app.
 The order of the index in marking criteria is not ascending but just in the order of added timing.
-- When marking criteria are edited after the mark sheet is edited, some checkpoints disappear from the mark sheet.
+- When marking criteria is edited after the mark sheet is modified, some checkpoints disappear from the mark sheet.
 - Want to reduce the number of buttons by using JavaScript
 
