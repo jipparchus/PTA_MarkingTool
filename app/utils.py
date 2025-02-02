@@ -260,7 +260,11 @@ def get_dataframes(df_mark, term, hw, marking_criteria):
     return df_checkpoints, df_gpp, df_feedbacks
 
 
-def generate_summary(submission_id, df_marksheet, term, hw, marking_criteria, assessor, template_head, template_common):
+def generate_summary(submission_id, df_marksheet, term, hw, marking_criteria, assessor, template_head, template_common, cmode=1):
+    """
+    Generate markdown report for a chosen submission.
+    cmode: Mode of syntax for markdown colourt text used in get_coloured_txt(). 1 by default.
+    """
     if submission_id not in df_marksheet.index:
         return 'submission id is not valid'
     else:
@@ -314,14 +318,34 @@ def generate_summary(submission_id, df_marksheet, term, hw, marking_criteria, as
         table_cp = '### Correctly Functioning Code {-}\n\n|Check Point|Mark|\n|---|---|\n'
         for cp, mark, markfull in zip(list_cp, list_cp_mark, list_cp_fullmark):
             table_cp += f"|{cp}|{mark} / {markfull}|\n"
-        table_cp += f"|\\textcolor{{blue}}{{Sub Total}}|\\textcolor{{blue}}{{{subtotal} / {sum(list_cp_fullmark)}}}|"
+        table_cp += '|' + get_coloured_txt('Sub Total', 'blue', cmode) + '|' + get_coloured_txt(subtotal, 'blue', cmode) + ' / ' + get_coloured_txt(sum(list_cp_fullmark), 'blue', cmode) + '|'
 
         table_gpp = '### Good Programming Practice {-}\n\n|Check Point| Mark|\n|---|---|\n'
         for gpp, mark, markfull in zip(list_gpp, list_gpp_mark, list_gpp_fullmark):
             table_gpp += f"|{gpp}|{mark} / {markfull}|\n"
-        table_gpp += f"|\\textcolor{{blue}}{{Average}}|\\textcolor{{blue}}{{{gpp_mean} / {int(sum(list_gpp_fullmark) / len(list_gpp_fullmark))}}}|"
+        table_gpp += '|' + get_coloured_txt('Average', 'blue', cmode) + '|' + get_coloured_txt(gpp_mean, 'blue', cmode) + ' / ' + get_coloured_txt(int(sum(list_gpp_fullmark) / len(list_gpp_fullmark)), 'blue', cmode) + '|'
 
         markdown = feedback + table_cp + '\n\n' + table_gpp
         full_mark_overall = sum(list_gpp_fullmark) / len(list_gpp_fullmark) + sum(list_cp_fullmark)
-        markdown += f'\n\n**Total \\textcolor{{red}}{{{mark_total} / {full_mark_overall}}}**\n\n(Assessor: {assessor})'
+        markdown += '\n\n**Total ' + get_coloured_txt(mark_total, 'red', cmode) + ' / ' + get_coloured_txt(full_mark_overall, 'red', cmode) + f'**\n\n(Assessor: {assessor})'
         return markdown
+
+
+def get_coloured_txt(txt, colour, mode=1):
+    """
+    txt: Text to displayt with colour
+    colour: 'red', 'blue', ...
+    mode:
+        0: txt (No Colouring)
+        1: textcolor{{red}}{{AAAAA}}
+        2: <font color='red'> AAAAA </font>
+        3: $\color{red}{\textsf{AAAAA}}$
+    """
+    if mode == 0:
+        return str(txt)
+    elif mode == 1:
+        return f'\\textcolor{{{colour}}}{{{txt}}}'
+    elif mode == 2:
+        return f"<font color='{colour}'> {txt} </font>"
+    elif mode == 3:
+        return '$\\color{' + colour + '}{\\textsf{' + str(txt) + '}}$'

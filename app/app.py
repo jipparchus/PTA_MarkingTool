@@ -16,7 +16,6 @@ config = read_config()
 path_sub = config['path_submission']
 template_head = config['template_head']
 template_common = config['template_common_mistake']
-cmd = config['cmd_ipynb2pdf']
 
 
 def load_mc():
@@ -57,7 +56,6 @@ def get_form_info(attrs, mode='form_get', **kwargs):
     defo_summary = kwargs.pop('summary', 'Summary will be generated here')
     defo_template_head = kwargs.pop('template_head', template_head)
     defo_template_common = kwargs.pop('template_common', template_common)
-    defo_cmd = kwargs.pop('cmd', cmd)
     defo_path_sub = kwargs.pop('path_sub', path_sub)
     defo_assessor = kwargs.pop('path_sub', 'assessor')
 
@@ -82,7 +80,6 @@ def get_form_info(attrs, mode='form_get', **kwargs):
         'summary': defo_summary,
         'template_head': defo_template_head,
         'template_common': defo_template_common,
-        'cmd': defo_cmd,
         'path_sub': defo_path_sub,
         'assessor': defo_assessor,
     }
@@ -92,89 +89,6 @@ def get_form_info(attrs, mode='form_get', **kwargs):
 
     elif mode == 'args_get':
         return tuple(request.args.get(attr, dict_defo[attr]) for attr in attrs)
-
-
-def ipynb2pdf(term, hw, **kwargs):
-    """
-    Convert ALL the .ipynb files into .pdf files. If multiprocessing, creaste queue, and start the processes.
-    Parameters:
-        mprocerss: True by default. If use multiprocessing or not.
-        poolsize: cpu_count by default. Pool size for the multiprocessing.
-    """
-    mprocess = kwargs.pop('multiprocess', True)
-    poolsize = kwargs.pop('poolsize', cpu_count())
-    print('CPU count: ', poolsize)
-    print('!!!!!!!!!!!!!!!!!!!!!START!!!!!!!!!!!!!!!!!!!!!!!!')
-    ts = time.time()
-    config = read_config()
-    condaenv = config['condaenv']
-    path_hw = os.path.join(config['path_submission'], f'T{term}HW{hw}')
-    lis_direc = os.listdir(path_hw)
-
-    if mprocess:
-        manager = Manager()
-        queue_log = manager.Queue()
-        queue_work = Queue()
-
-    # For each submission id, loop & visualise the progress.
-    for f in lis_direc:
-        # If there is a .ipnb file, convert that to .pdf
-        path_ff = os.path.join(path_hw, f, 'File submissions')
-        for ff in os.listdir(path_ff):
-            if ff.endswith('.ipynb'):
-                # Run the command to convert ipynb to pdf
-                if mprocess:
-                    queue_work.put((condaenv, ff, path_ff, queue_log))
-                else:
-                    subprocess.Popen(f'cvrt_win.cmd {condaenv} {ff} "{path_ff}"')
-    if mprocess:
-        # logging.debug('Start')
-        processes = [Process(target=ipy2pdf_worker, args=(queue_work, queue_log)) for _ in range(poolsize)]
-        processes.append(Process(target=log_worker, args=(queue_log,)))
-        for process in processes:
-            process.start()
-
-        for process in processes:
-            process.join()
-        # logging.debug('End')
-    te = time.time()
-    print('!!!!!!!!!!!!!!!!!!!!!END!!!!!!!!!!!!!!!!!!!!!!!!')
-    print(te - ts)
-
-
-def ipy2pdf_worker(queue_work, queue_log):
-    """
-    Subprocess for ipynb2pdf().
-    Refereced...:
-        https://qiita.com/COJICOJI/items/d402f9ba5ad715fa4c23
-        https://tech.nkhn37.net/python-multiprocessing-basics/#Queue
-        https://shun-studio.com/python/multiprocess-single-log/
-    """
-    # Repeat while the queue is not empty
-    while not queue_work.empty():
-        try:
-            condaenv, ff, path_ff, queue_log = queue_work.get_nowait()
-        except Empty:
-            break
-        else:
-            try:
-                subprocess.run(f'cvrt_win.cmd {condaenv} {ff} "{path_ff}"')
-                queue_log.put(f'cvrt_win.cmd {condaenv} {ff} "{path_ff}"')
-            except subprocess.CalledProcessError as e:
-                print(e)
-                queue_log.put(e)
-
-
-def log_worker(queue_log):
-    while not queue_log.empty():
-        try:
-            msg = queue_log.get()
-        except Empty:
-            break
-        else:
-            print('<' * 100)
-            print("[LOG]:", msg)
-            print('>' * 100)
 
 
 @app.route('/path_assessor_change', methods=['POST'])
@@ -458,6 +372,11 @@ def add_feedback():
     # if feedback != '':
     # --------- !!!! make a func that simply save the feedback to be used in other function, too !!!! --------------------------
     feedback = re.sub(r'(\r\n|\r|\n){2}', '///', feedback)
+    # Trim unnecessary strings
+    if feedback.endswith(' '):
+        feedback = feedback[:-1]
+    if feedback.endswith('///'):
+        feedback = feedback[:-3]
     ms.df_ms.at[sub_id_selected, 'Feedback'] = feedback
     message = f'Saved: Feedback for submission by {sub_id_selected} for homework T{term}HW{hw}'
     return redirect(url_for(
@@ -514,8 +433,8 @@ def reporting():
     config = read_config()
     path_sub, assessor = config['path_submission'], config['assessor']
     # GET only
-    attrs = ['term', 'hw', 'sub_ids_str', 'sub_id_selected', 'message', 'summary', 'template_head', 'template_common', 'cmd']
-    term, hw, sub_ids_str, sub_id_selected, message, summary, template_head, template_common, cmd = get_form_info(attrs, 'args_get')
+    attrs = ['term', 'hw', 'sub_ids_str', 'sub_id_selected', 'message', 'summary', 'template_head', 'template_common']
+    term, hw, sub_ids_str, sub_id_selected, message, summary, template_head, template_common = get_form_info(attrs, 'args_get')
     # Convert strings into lists
     lis_sub_ids = string2list(sub_ids_str)
     # Marksheet
@@ -535,7 +454,6 @@ def reporting():
         template_common=template_common,
         summary=summary,
         summary_html=summary_html,
-        cmd=cmd,
         path_sub=path_sub,
         assessor=assessor,
     )
@@ -655,7 +573,7 @@ def generate():
     ms.get_marksheet(term, hw, sub_ids)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
-    summary = generate_summary(sub_id_selected, ms.df_ms, term, hw, mc, assessor, template_head, template_common)
+    summary = generate_summary(sub_id_selected, ms.df_ms, term, hw, mc, assessor, template_head, template_common, 2)
 
     return redirect(url_for(
         'reporting',
@@ -711,6 +629,89 @@ def ipynb2pdf_all():
         template_common=template_common,
         summary='',
     ))
+
+
+def ipynb2pdf(term, hw, **kwargs):
+    """
+    Convert ALL the .ipynb files into .pdf files. If multiprocessing, creaste queue, and start the processes.
+    Parameters:
+        mprocerss: True by default. If use multiprocessing or not.
+        poolsize: cpu_count by default. Pool size for the multiprocessing.
+    """
+    mprocess = kwargs.pop('multiprocess', True)
+    poolsize = kwargs.pop('poolsize', cpu_count())
+    print('CPU count: ', poolsize)
+    print('!!!!!!!!!!!!!!!!!!!!!START!!!!!!!!!!!!!!!!!!!!!!!!')
+    ts = time.time()
+    config = read_config()
+    condaenv = config['condaenv']
+    path_hw = os.path.join(config['path_submission'], f'T{term}HW{hw}')
+    lis_direc = os.listdir(path_hw)
+
+    if mprocess:
+        manager = Manager()
+        queue_log = manager.Queue()
+        queue_work = Queue()
+
+    # For each submission id, loop & visualise the progress.
+    for f in lis_direc:
+        # If there is a .ipnb file, convert that to .pdf
+        path_ff = os.path.join(path_hw, f, 'File submissions')
+        for ff in os.listdir(path_ff):
+            if ff.endswith('.ipynb'):
+                # Run the command to convert ipynb to pdf
+                if mprocess:
+                    queue_work.put((condaenv, ff, path_ff, queue_log))
+                else:
+                    subprocess.Popen(f'cvrt_win.cmd {condaenv} {ff} "{path_ff}"')
+    if mprocess:
+        # logging.debug('Start')
+        processes = [Process(target=ipy2pdf_worker, args=(queue_work, queue_log)) for _ in range(poolsize)]
+        processes.append(Process(target=log_worker, args=(queue_log,)))
+        for process in processes:
+            process.start()
+
+        for process in processes:
+            process.join()
+        # logging.debug('End')
+    te = time.time()
+    print('!!!!!!!!!!!!!!!!!!!!!END!!!!!!!!!!!!!!!!!!!!!!!!')
+    print(te - ts)
+
+
+def ipy2pdf_worker(queue_work, queue_log):
+    """
+    Subprocess for ipynb2pdf().
+    Refereced...:
+        https://qiita.com/COJICOJI/items/d402f9ba5ad715fa4c23
+        https://tech.nkhn37.net/python-multiprocessing-basics/#Queue
+        https://shun-studio.com/python/multiprocess-single-log/
+    """
+    # Repeat while the queue is not empty
+    while not queue_work.empty():
+        try:
+            condaenv, ff, path_ff, queue_log = queue_work.get_nowait()
+        except Empty:
+            break
+        else:
+            try:
+                subprocess.run(f'cvrt_win.cmd {condaenv} {ff} "{path_ff}"')
+                queue_log.put(f'cvrt_win.cmd {condaenv} {ff} "{path_ff}"')
+            except subprocess.CalledProcessError as e:
+                print(e)
+                queue_log.put(e)
+
+
+def log_worker(queue_log):
+    while not queue_log.empty():
+        try:
+            msg = queue_log.get()
+        except Empty:
+            break
+        else:
+            print('<' * 100)
+            print("[LOG]:", msg)
+            print('>' * 100)
 
 
 if __name__ == ('__main__'):
