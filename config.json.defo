@@ -3,6 +3,5 @@
     "assessor": "XYZ",
     "template_head": "**Well done all who submitted the homework!!**\r\n\r\nCode cells with `\"\"\" Added by Assessor \"\"\"` are added by the assessor.\r\n",
     "template_common_mistake": "- Strange indentations in code cells.\r\n\r\n- Packing all the script in a single code cell.\r\n\r\n- No markdown headers/comments.\r\n",
-    "cmd_ipynb2pdf": "\n## Convert to PDF from Jupyter Notebook\n\n```bash\nconda activate <conda_env>\n```\n\n```bash\njupyter nbconvert --execute --to pdf --allow-errors xxx.ipynb\n```\n\nor if you are laazy to copy and paste the .ipynb file name, copy and paste the below in the same directory as the jupyter notebook file.\n\n```bash\n#!/bin/bash\necho off\n# Convert .ipynb into .pdf under the current direc\nfor f in *.ipynb; do\n    if [ -f \"$f\" ]; then\n        echo \"Converting $f to PDF...\"\n        jupyter nbconvert --execute --to pdf --allow-errors \"$f\"\n        if [ $? -ne 0 ]; then\n            echo \"Error occurred while converting $f\"\n        else\n            echo \"Successfully converted $f to PDF\"\n        fi\n    fi\ndone\n```\n",
     "condaenv": "env"
 }
