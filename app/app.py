@@ -1,12 +1,17 @@
 import os
 import numpy as np
 from flask import Flask, render_template, request, redirect, url_for
+from flask_socketio import SocketIO, emit
 import re
-from .utils import save_csv, get_folders, get_marks, MarkingCriteria, MarkSheet, generate_summary, string2list, list2string, list2string_routine, read_config, write_config, df_scrollable, ipynb2pdf
+from .utils import save_csv, get_folders, get_marks, MarkingCriteria, MarkSheet, generate_summary, string2list, list2string, list2string_routine, read_config, write_config, df_scrollable
 import markdown
-from urllib.parse import quote
+from multiprocessing import Process, Queue, cpu_count, current_process, Manager
+import subprocess
+from queue import Empty
+import time
 
 app = Flask(__name__)
+socketio = SocketIO(app, async_mode="threading")
 config = read_config()
 path_sub = config['path_submission']
 template_head = config['template_head']
@@ -65,7 +70,6 @@ def get_form_info(attrs, mode='form_get', **kwargs):
         'gpp_idx': defo_gpp_idx,
         'gpp_txt': defo_gpp_txt,
         'gpp_mark': defo_gpp_mark,
-
         'sub_ids_str': defo_sub_ids_str,
         'points_str': defo_points_str,
         'sub_id_selected': defo_sub_id_selected,
@@ -88,6 +92,89 @@ def get_form_info(attrs, mode='form_get', **kwargs):
 
     elif mode == 'args_get':
         return tuple(request.args.get(attr, dict_defo[attr]) for attr in attrs)
+
+
+def ipynb2pdf(term, hw, **kwargs):
+    """
+    Convert ALL the .ipynb files into .pdf files. If multiprocessing, creaste queue, and start the processes.
+    Parameters:
+        mprocerss: True by default. If use multiprocessing or not.
+        poolsize: cpu_count by default. Pool size for the multiprocessing.
+    """
+    mprocess = kwargs.pop('multiprocess', True)
+    poolsize = kwargs.pop('poolsize', cpu_count())
+    print('CPU count: ', poolsize)
+    print('!!!!!!!!!!!!!!!!!!!!!START!!!!!!!!!!!!!!!!!!!!!!!!')
+    ts = time.time()
+    config = read_config()
+    condaenv = config['condaenv']
+    path_hw = os.path.join(config['path_submission'], f'T{term}HW{hw}')
+    lis_direc = os.listdir(path_hw)
+
+    if mprocess:
+        manager = Manager()
+        queue_log = manager.Queue()
+        queue_work = Queue()
+
+    # For each submission id, loop & visualise the progress.
+    for f in lis_direc:
+        # If there is a .ipnb file, convert that to .pdf
+        path_ff = os.path.join(path_hw, f, 'File submissions')
+        for ff in os.listdir(path_ff):
+            if ff.endswith('.ipynb'):
+                # Run the command to convert ipynb to pdf
+                if mprocess:
+                    queue_work.put((condaenv, ff, path_ff, queue_log))
+                else:
+                    subprocess.Popen(f'cvrt_win.cmd {condaenv} {ff} "{path_ff}"')
+    if mprocess:
+        # logging.debug('Start')
+        processes = [Process(target=ipy2pdf_worker, args=(queue_work, queue_log)) for _ in range(poolsize)]
+        processes.append(Process(target=log_worker, args=(queue_log,)))
+        for process in processes:
+            process.start()
+
+        for process in processes:
+            process.join()
+        # logging.debug('End')
+    te = time.time()
+    print('!!!!!!!!!!!!!!!!!!!!!END!!!!!!!!!!!!!!!!!!!!!!!!')
+    print(te - ts)
+
+
+def ipy2pdf_worker(queue_work, queue_log):
+    """
+    Subprocess for ipynb2pdf().
+    Refereced...:
+        https://qiita.com/COJICOJI/items/d402f9ba5ad715fa4c23
+        https://tech.nkhn37.net/python-multiprocessing-basics/#Queue
+        https://shun-studio.com/python/multiprocess-single-log/
+    """
+    # Repeat while the queue is not empty
+    while not queue_work.empty():
+        try:
+            condaenv, ff, path_ff, queue_log = queue_work.get_nowait()
+        except Empty:
+            break
+        else:
+            try:
+                subprocess.run(f'cvrt_win.cmd {condaenv} {ff} "{path_ff}"')
+                queue_log.put(f'cvrt_win.cmd {condaenv} {ff} "{path_ff}"')
+            except subprocess.CalledProcessError as e:
+                print(e)
+                queue_log.put(e)
+
+
+def log_worker(queue_log):
+    while not queue_log.empty():
+        try:
+            msg = queue_log.get()
+        except Empty:
+            break
+        else:
+            print('<' * 100)
+            print("[LOG]:", msg)
+            print('>' * 100)
 
 
 @app.route('/path_assessor_change', methods=['POST'])
@@ -585,6 +672,11 @@ def generate():
 
 @app.route('/ipynb2pdf', methods=['POST'])
 def ipynb2pdf_all():
+    """
+    Use multiprocessing to convert ipynb to pdf. cnvrt_win.cmd is called in each subprocess.
+    Want to show real time log on the screen using socketIO.
+    So far, just disable all the buttons while executing the command. If error, recommend to brows back.
+    """
     attrs = ['term', 'hw', 'sub_id_selected', 'template_head']
     term, hw, sub_id_selected, template_head = get_form_info(attrs)
 
@@ -599,7 +691,14 @@ def ipynb2pdf_all():
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
     # Converting the files. Somehow need to output messages...
-    ipynb2pdf(term, hw)
+    ipynb2pdf(term, hw, multiprocess=True)
+    """
+    multiprocessing, pool size 3, run: 91, 75 s
+    multiprocessing, pool size 16, run: 40 s
+    multiprocessing, pool size 3, Popen: error
+    subprocess, run: 180 s
+    subprocess, Popen: error
+    """
 
     return redirect(url_for(
         'reporting',
@@ -615,5 +714,9 @@ def ipynb2pdf_all():
 
 
 if __name__ == ('__main__'):
+    import eventlet
     load_mc()
-    app.run(debug=True, host='0.0.0.0', port=5050)
+    # app.run(debug=True, host='0.0.0.0', port=5050)
+    eventlet.monkey_patch()
+    # socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True, use_reloader=False)

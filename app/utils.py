@@ -4,11 +4,10 @@ import os
 import re
 from decimal import Decimal, ROUND_HALF_UP
 import json
-import subprocess
 
 
 def read_config():
-    with open('./config.json') as f:
+    with open('config.json') as f:
         config = json.load(f)
         path = config['path_submission']
         if path == 'cwd':
@@ -326,19 +325,3 @@ def generate_summary(submission_id, df_marksheet, term, hw, marking_criteria, as
         full_mark_overall = sum(list_gpp_fullmark) / len(list_gpp_fullmark) + sum(list_cp_fullmark)
         markdown += f'\n\n**Total \\textcolor{{red}}{{{mark_total} / {full_mark_overall}}}**\n\n(Assessor: {assessor})'
         return markdown
-
-
-def ipynb2pdf(term, hw):
-    config = read_config()
-    condaenv = config['condaenv']
-    path_hw = os.path.join(config['path_submission'], f'T{term}HW{hw}')
-    lis_direc = os.listdir(path_hw)
-    # For each submission id, loop & visualise the progress.
-    for f in lis_direc:
-        # If there is a .ipnb file, convert that to .pdf
-        path_ff = os.path.join(path_hw, f, 'File submissions')
-        for ff in os.listdir(path_ff):
-            if ff.endswith('.ipynb'):
-                # Run the command to convert ipynb to pdf
-                subprocess.run(f'cvrt_win.cmd {condaenv} {ff} "{path_ff}"')
-    return
