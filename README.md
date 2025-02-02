@@ -10,7 +10,7 @@ I want to make the workflow for my Python coursework marking job more efficient.
 - It was time-consuming to **travel between Excel mark sheets, notepad, and Jupyter Notebook**.
 - Extra attention must be paid to the **manual selection of cells** in the mark sheet.
 - Feedback and common mistakes found had to be kept in the notepad app.
-- Manual writing of the summary feedback form did not guarantee **consistency** in the format. Copying, pasting and modifying the form looked inefficient.
+- Manual writing of the summary report did not guarantee **consistency** in the format. Copying, pasting and modifying the form looked inefficient.
 
 <h2>This Application Provides ...</h2>
 
@@ -31,6 +31,61 @@ You will need to open only this application, the Jupyter Notebook submitted, and
 - This is designed to minimise the use of keyboard input because this makes the marking process smoother, personally.
 
 - The note-taking area for frequently seen mistakes is oriented in the mark sheet editing tab because they are found during marking, while the note is used to generate the report generation page. 
+
+
+
+## $\color{green}{\textsf{Example of Summary Report}}$
+
+### Summary {-}
+
+**Well done all who submitted the homework!!**
+
+Much less `X not defined` errors this time!! Good work!
+
+
+**Frequently seen mistakes**: 
+
+- Strange indentations in code cells.
+
+- Packing all the script in a single code cell.
+
+
+**Feedbacks**:
+
+- feedback 1
+
+- feedback 2
+
+
+### Correctly Functioning Code {-}
+
+|Check Point|Mark|
+|---|---|
+|Check Point 1|1.0 / 1|
+|Check Point 2|3.0 / 3|
+|Check Point 3|3.0 / 5|
+|Check Point 4|3.0 / 3|
+|Check Point 5|1.0 / 1|
+|Check Point 6|1.0 / 1|
+|Check Point 7|1.0 / 1|
+|\textcolor{blue}{Sub Total}|\textcolor{blue}{13.0 / 15}|
+
+### Good Programming Practice {-}
+
+|Check Point| Mark|
+|---|---|
+|Good Programming Practice 1|5.0 / 5|
+|Good Programming Practice 2|5.0 / 5|
+|Good Programming Practice 3|5.0 / 5|
+|Good Programming Practice 4|5.0 / 5|
+|Good Programming Practice 5|5.0 / 5|
+|\textcolor{blue}{Average}|\textcolor{blue}{5.0 / 5}|
+
+**Total \textcolor{red}{18.0 / 20.0}**
+
+(Assessor: QQ)
+
+
 
 
 <h2>How to Use</h2>
@@ -76,9 +131,9 @@ Feedbacks will be shown with bullet points by default. Please change lines twice
 <video src="https://github.com/user-attachments/assets/c1e0ff15-0e6e-4827-b0bd-4482e49a38f7" controls playsinline autoplay loop muted width="500"></video>
 
 
-3. Summary of marks and feedbacks generation page **(✅"\_\_feedback\_\_" bug has been removed )**
+3. Summary report generation page **(✅"\_\_feedback\_\_" bug has been removed )**
 
-- Select a homework, confirm the submission OD, then press 'Generate Report' to generate a markdown report. Please edit the template in anyways you like!
+- Select a homework, confirm the submission ID, then press 'Generate Report' to generate a markdown report. Please edit the template in any ways you like!
 - The syntax of markdown is just tested for my environment only. It is expected that the syntax for colour text may not work for your environment. Please try replace, e.g. `\textcolor{red}{ABC}` to `<font color='red'> ABC </font>` then convert the notebook to PDF to see if it works.
 - Copy the markdown report and paste that on the submitted .ipynb and convert to .pdf.
 - Conversion command of .ipynb to .pdf may not work for your environment.
