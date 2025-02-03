@@ -113,8 +113,7 @@ For the first run, edit the path to the submissions directory & assessor's initi
 
 <video src="https://github.com/user-attachments/assets/0d52a294-a646-4707-b616-65f3343203de" controls playsinline autoplay loop muted width="500"></video>
 
-## Marking Process (NEED TO BE COMPLETED)
-
+## Marking Process
 There are 3 tabs for the application.
 
 **1. Marking criteria editor page**
@@ -184,11 +183,14 @@ conda env create --name env_name --file=env_pip.yml
 	└── HW2_marksheet.csv              [ AUTO-GENERATED ]
 ```
 
+# 🚀 Ideas
+
+- Replace buttons `feedback 1`, `feedback 2`, ... with actual feedback comments. By pressing them, markers can reuse the feedback for different submissions.
+- Want to reduce the number of buttons by using JavaScript.
+
 # ⚠️ Known Issues
 
 So far, the application does the minimum job and is planned to be shared with my colleagues.  
-- There is not enough README to show how to use the app.
-The order of the index in marking criteria is not ascending but just in the order of added timing.
+- The order of the index in marking criteria is not ascending but just in the order of added timing.
 - When marking criteria is edited after the mark sheet is modified, some checkpoints disappear from the mark sheet.
-- Want to reduce the number of buttons by using JavaScript
 
