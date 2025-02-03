@@ -68,7 +68,7 @@ Much less `X not defined` errors this time!! Good work!
 |Check Point 5|1.0 / 1|
 |Check Point 6|1.0 / 1|
 |Check Point 7|1.0 / 1|
-|\textcolor{blue}{Sub Total}|\textcolor{blue}{13.0 / 15}|
+|$\color{blue}{\textsf{Sub Total}}$|$\color{blue}{\textsf{13.0}}$ / $\color{blue}{\textsf{15}}$|
 
 ### Good Programming Practice {-}
 
@@ -79,9 +79,9 @@ Much less `X not defined` errors this time!! Good work!
 |Good Programming Practice 3|5.0 / 5|
 |Good Programming Practice 4|5.0 / 5|
 |Good Programming Practice 5|5.0 / 5|
-|\textcolor{blue}{Average}|\textcolor{blue}{5.0 / 5}|
+|$\color{blue}{\textsf{Average}}$| 	$\color{blue}{\textsf{5.0}}$ / $\color{blue}{\textsf{5}}$|
 
-**Total \textcolor{red}{18.0 / 20.0}**
+**Total $\color{red}{\textsf{18.0}}$ / $\color{red}{\textsf{20.0}}$**
 
 (Assessor: QQ)
 
@@ -96,7 +96,7 @@ Much less `X not defined` errors this time!! Good work!
 2. Rename `config.json.defo` ➡️ `config.json`.
 3. Open the terminal/command prompt and move to the folder location.
 4. Activate the virtual environment if necessary, then `python run.py`.
-5. If no error messages, 'ctrl' + 'click' the link appears on the terminal/command prompt.
+5. If no error messages, 'ctrl' + 'click' the link appears (e.g. http://127.0.0.1:5000) on the terminal/command prompt.
 6. Edit to make sure the path to the submission folders is correct.
 
 ```bash
@@ -134,7 +134,7 @@ Feedbacks will be shown with bullet points by default. Please change lines twice
 3. Summary report generation page **(✅"\_\_feedback\_\_" bug has been removed )**
 
 - Select a homework, confirm the submission ID, then press 'Generate Report' to generate a markdown report. Please edit the template in any ways you like!
-- The syntax of markdown is just tested for my environment only. It is expected that the syntax for colour text may not work for your environment. Please try replace, e.g. `\textcolor{red}{ABC}` to `<font color='red'> ABC </font>` then convert the notebook to PDF to see if it works.
+- The style of markdown coloured text is just tested for my environment only. The default set of the style for colour text may not work for your environment. Please try different styles and editing the config file if required, then convert the notebook to PDF to see if it works.
 - Copy the markdown report and paste that on the submitted .ipynb and convert to .pdf.
 - Conversion command of .ipynb to .pdf may not work for your environment.
 
@@ -165,26 +165,25 @@ Feedbacks will be shown with bullet points by default. Please change lines twice
 │   ├── ...
 │   └── run.py                             [ !!! USE THIS TO RUN THE APP !!! ]
 └── submissions
-	├── T1HW1
+	├── HW1
 	│   ├── submission_id1
 	│   │   └── File submissions
 	│   │       ├── xxx.ipynb
 	│   │       └── data.csv
 	│   ├── submission_id2
 	│   └── ...
-	├── T1HW2
+	├── HW2
 	├── ...
 	├── checkpoints.csv                [ AUTO-GENERATED ]
 	├── good_programming_practice.csv  [ AUTO-GENERATED ]
-	├── T1HW1_marksheet.csv            [ AUTO-GENERATED ]
-	└── T1HW2_marksheet.csv            [ AUTO-GENERATED ]
+	├── HW1_marksheet.csv              [ AUTO-GENERATED ]
+	└── HW2_marksheet.csv              [ AUTO-GENERATED ]
 ```
 
 <h2>Known Issues</h2>
 
 So far, the application does the minimum job and is planned to be shared with my colleagues.  
-
-- No need to name the homeworks as combination of "T (term)" and "HW (homework)". Just "HW" is enough.
+- Demo videos are out of dated (Some bugs have ben fixed and new functionalities have been implemented.)
 - There is not enough README to show how to use the app.
 The order of the index in marking criteria is not ascending but just in the order of added timing.
 - When marking criteria is edited after the mark sheet is modified, some checkpoints disappear from the mark sheet.
