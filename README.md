@@ -114,21 +114,20 @@ Press CTRL+C to quit
 
 For the first run, edit the path to the submissions directory & assessor's initials. Click 'Save Change' to save the configurations.
 
-
-<video src="https://github.com/user-attachments/assets/842c2961-15e1-4600-be47-2548757c0721" controls playsinline autoplay loop muted width="500"></video>
+<video src="https://github.com/user-attachments/assets/0d52a294-a646-4707-b616-65f3343203de" controls playsinline autoplay loop muted width="500"></video>
 
 **Marking Process (NEED TO BE COMPLETED)**
 
 There are 3 tabs for the application.
 1. Marking criteria editor page
 
-<video src="https://github.com/user-attachments/assets/1f203d72-21be-4a5b-8e34-61482fb627e2" controls playsinline autoplay loop muted width="500"></video>
+<video src="https://github.com/user-attachments/assets/0bac0979-e54e-4440-9fad-a40e69647eea" controls playsinline autoplay loop muted width="500"></video>
 
 2. Markingsheet editing page **(✅"\_\_feedback\_\_" bug has been removed )**
 
 Feedbacks will be shown with bullet points by default. Please change lines twice between feedbacks. The same rules apply for the 'Common Mistakes' section. You can leave the section empty if there is nothing to mention.
 
-<video src="https://github.com/user-attachments/assets/c1e0ff15-0e6e-4827-b0bd-4482e49a38f7" controls playsinline autoplay loop muted width="500"></video>
+<video src="https://github.com/user-attachments/assets/bf32265c-b2c1-454f-bec3-3f23474c58b6" controls playsinline autoplay loop muted width="500"></video>
 
 
 3. Summary report generation page **(✅"\_\_feedback\_\_" bug has been removed )**
@@ -138,7 +137,7 @@ Feedbacks will be shown with bullet points by default. Please change lines twice
 - Copy the markdown report and paste that on the submitted .ipynb and convert to .pdf.
 - Conversion command of .ipynb to .pdf may not work for your environment.
 
-<video src="https://github.com/user-attachments/assets/0540702e-4f1f-4cbe-aa40-3c9acc24e848" controls playsinline autoplay loop muted width="500"></video>
+<video src="https://github.com/user-attachments/assets/87f6a76c-4700-45a3-840a-a60005497ed4" controls playsinline autoplay loop muted width="500"></video>
 
 <h2>Other Information</h2>
 
