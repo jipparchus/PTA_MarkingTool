@@ -3,5 +3,6 @@
     "assessor": "XYZ",
     "template_head": "**Well done all who submitted the homework!!**\r\n\r\nCode cells with `\"\"\" Added by Assessor \"\"\"` are added by the assessor.\r\n",
     "template_common_mistake": "- Strange indentations in code cells.\r\n\r\n- Packing all the script in a single code cell.\r\n\r\n- No markdown headers/comments.\r\n",
+    "col_styles": ["TXT", "textcolor{{COLOUR}}{{TXT}}", "<font color='COLOUR'>TXT</font>", "$\\color{COLOUR}{\\textsf{TXT}}$"],
     "condaenv": "env"
 }
