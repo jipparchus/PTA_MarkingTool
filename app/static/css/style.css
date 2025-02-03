@@ -1,6 +1,7 @@
 /* https://blog.frankul.net/2022/10/07/button/ */
 
 :root {
+  --none: #ffffff00;
   --white: #fff;
   --black: #1a1a1a;
   --background: #c4c4c4;
@@ -97,6 +98,13 @@
 
 .usrinput.selection option {
     background: var(--background);
+}
+
+.usrinput.lbl {
+  background: var(--none);
+  border: solid 2px var(--none);
+  color: var(--navy_dark);
+  font-weight: bold;
 }
 
 .all{

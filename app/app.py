@@ -58,6 +58,7 @@ def get_form_info(attrs, mode='form_get', **kwargs):
     defo_template_common = kwargs.pop('template_common', template_common)
     defo_path_sub = kwargs.pop('path_sub', path_sub)
     defo_assessor = kwargs.pop('path_sub', 'assessor')
+    defo_cmode_selected = kwargs.pop('cmode_selected', 'cmode2')
 
     dict_defo = {
         'term': defo_term,
@@ -82,6 +83,7 @@ def get_form_info(attrs, mode='form_get', **kwargs):
         'template_common': defo_template_common,
         'path_sub': defo_path_sub,
         'assessor': defo_assessor,
+        'cmode_selected': defo_cmode_selected,
     }
 
     if mode == 'form_get':
@@ -431,15 +433,15 @@ Report Generation Page
 @app.route('/reporting')
 def reporting():
     config = read_config()
-    path_sub, assessor = config['path_submission'], config['assessor']
+    path_sub, assessor, col_styles = config['path_submission'], config['assessor'], config['col_styles']
     # GET only
-    attrs = ['term', 'hw', 'sub_ids_str', 'sub_id_selected', 'message', 'summary', 'template_head', 'template_common']
-    term, hw, sub_ids_str, sub_id_selected, message, summary, template_head, template_common = get_form_info(attrs, 'args_get')
+    attrs = ['term', 'hw', 'sub_ids_str', 'sub_id_selected', 'message', 'summary', 'template_head', 'template_common', 'cmode_selected']
+    term, hw, sub_ids_str, sub_id_selected, message, summary, template_head, template_common, cmode_selected = get_form_info(attrs, 'args_get')
     # Convert strings into lists
     lis_sub_ids = string2list(sub_ids_str)
     # Marksheet
     sub_ids_with_selection = [{'value': id, 'selected': id == sub_id_selected} for id in lis_sub_ids]
-
+    cmodes_with_selection = [{'example': cstyle, 'id': f'cmode{col_styles.index(cstyle)}', 'selected': str(col_styles.index(cstyle)) == cmode_selected[5:]} for cstyle in col_styles]
     summary_html = markdown.markdown(summary, extensions=['tables'])
 
     return render_template(
@@ -456,6 +458,8 @@ def reporting():
         summary_html=summary_html,
         path_sub=path_sub,
         assessor=assessor,
+        cmode_selected=cmode_selected,
+        cmodes_with_selection=cmodes_with_selection,
     )
 
 
@@ -463,8 +467,8 @@ def reporting():
 def confirm_homework():
     path_sub = read_config()['path_submission']
     load_mc()
-    attrs = ['term', 'hw', 'sub_id_selected']
-    term, hw, sub_id_selected = get_form_info(attrs)
+    attrs = ['term', 'hw', 'sub_id_selected', 'cmode_selected']
+    term, hw, sub_id_selected, cmode_selected = get_form_info(attrs)
 
     path_full = os.path.join(path_sub, f'T{term}HW{hw}')
     ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
@@ -485,6 +489,7 @@ def confirm_homework():
         sub_ids_str=sub_ids_str,
         sub_id_selected=sub_id_selected,
         message=message,
+        cmode_selected=cmode_selected,
     ))
 
 
@@ -492,8 +497,8 @@ def confirm_homework():
 def confirm_sub_id():
     load_mc()
     path_sub = read_config()['path_submission']
-    attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'template_common']
-    term, hw, sub_id_selected, template_head, template_common = get_form_info(attrs)
+    attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'template_common', 'cmode_selected']
+    term, hw, sub_id_selected, template_head, template_common, cmode_selected = get_form_info(attrs)
 
     path_full = os.path.join(path_sub, f'T{term}HW{hw}')
     ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
@@ -516,13 +521,14 @@ def confirm_sub_id():
         message=message,
         template_head=template_head,
         template_common=template_common,
+        cmode_selected=cmode_selected,
     ))
 
 
 @app.route('/update_template_head', methods=['POST'])
 def update_template_head():
-    attrs = ['term', 'hw', 'sub_id_selected', 'template_head']
-    term, hw, sub_id_selected, template_head = get_form_info(attrs)
+    attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'cmode_selected']
+    term, hw, sub_id_selected, template_head, cmode_selected = get_form_info(attrs)
 
     path_sub = read_config()['path_submission']
     path_full = os.path.join(path_sub, f'T{term}HW{hw}')
@@ -547,6 +553,7 @@ def update_template_head():
         sub_id_selected=sub_id_selected,
         message=message,
         template_head=template_head,
+        cmode_selected=cmode_selected,
     ))
 
 
@@ -556,10 +563,8 @@ def generate():
     config = read_config()
     path_sub, assessor, template_common = config['path_submission'], config['assessor'], config['template_common_mistake']
 
-    # attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'template_common']
-    # term, hw, sub_id_selected, template_head, template_common = get_form_info(attrs)
-    attrs = ['term', 'hw', 'sub_id_selected', 'template_head']
-    term, hw, sub_id_selected, template_head = get_form_info(attrs)
+    attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'cmode_selected']
+    term, hw, sub_id_selected, template_head, cmode_selected = get_form_info(attrs)
 
     path_full = os.path.join(path_sub, f'T{term}HW{hw}')
     ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
@@ -573,7 +578,7 @@ def generate():
     ms.get_marksheet(term, hw, sub_ids)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
-    summary = generate_summary(sub_id_selected, ms.df_ms, term, hw, mc, assessor, template_head, template_common, 2)
+    summary = generate_summary(sub_id_selected, ms.df_ms, term, hw, mc, assessor, template_head, template_common, cmode_selected[5:])
 
     return redirect(url_for(
         'reporting',
@@ -585,6 +590,7 @@ def generate():
         template_head=template_head,
         template_common=template_common,
         summary=summary,
+        cmode_selected=cmode_selected,
     ))
 
 
@@ -595,8 +601,8 @@ def ipynb2pdf_all():
     Want to show real time log on the screen using socketIO.
     So far, just disable all the buttons while executing the command. If error, recommend to brows back.
     """
-    attrs = ['term', 'hw', 'sub_id_selected', 'template_head']
-    term, hw, sub_id_selected, template_head = get_form_info(attrs)
+    attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'cmode_selected']
+    term, hw, sub_id_selected, template_head, cmode_selected = get_form_info(attrs)
 
     path_full = os.path.join(path_sub, f'T{term}HW{hw}')
     ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
@@ -628,6 +634,7 @@ def ipynb2pdf_all():
         template_head=template_head,
         template_common=template_common,
         summary='',
+        cmode_selected=cmode_selected,
     ))
 
 

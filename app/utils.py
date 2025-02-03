@@ -260,7 +260,7 @@ def get_dataframes(df_mark, term, hw, marking_criteria):
     return df_checkpoints, df_gpp, df_feedbacks
 
 
-def generate_summary(submission_id, df_marksheet, term, hw, marking_criteria, assessor, template_head, template_common, cmode=1):
+def generate_summary(submission_id, df_marksheet, term, hw, marking_criteria, assessor, template_head, template_common, cmode='1'):
     """
     Generate markdown report for a chosen submission.
     cmode: Mode of syntax for markdown colourt text used in get_coloured_txt(). 1 by default.
@@ -331,21 +331,15 @@ def generate_summary(submission_id, df_marksheet, term, hw, marking_criteria, as
         return markdown
 
 
-def get_coloured_txt(txt, colour, mode=1):
+def get_coloured_txt(txt, colour, mode='1'):
     """
     txt: Text to displayt with colour
     colour: 'red', 'blue', ...
     mode:
-        0: txt (No Colouring)
-        1: textcolor{{red}}{{AAAAA}}
-        2: <font color='red'> AAAAA </font>
-        3: $\color{red}{\textsf{AAAAA}}$
+        0: TXT
+        1: textcolor{{COLOUR}}{{TXT}}
+        2: <font color='COLOUR'>TXT</font>
+        3: $\color{COLOUR}{\textsf{TXT}}$
     """
-    if mode == 0:
-        return str(txt)
-    elif mode == 1:
-        return f'\\textcolor{{{colour}}}{{{txt}}}'
-    elif mode == 2:
-        return f"<font color='{colour}'> {txt} </font>"
-    elif mode == 3:
-        return '$\\color{' + colour + '}{\\textsf{' + str(txt) + '}}$'
+    col_satyles = read_config()['col_styles']
+    return col_satyles[int(mode)].replace('TXT', str(txt)).replace('COLOUR', str(colour))
