@@ -91,23 +91,21 @@ Much less `X not defined` errors this time!! Good work!
 
 ## Initial Seting Up
 
-1. Download the project to your local machine by 'Code' > 'Download ZIP'. Unzip the folder
+1. Download the project to your local machine by 'Code' > 'Download ZIP'. Unzip the folder and move the folder to your working directory. See [Example Filing System](#example-filing-system) section for example.
 2. Rename `config.json.defo` ➡️ `config.json`.
 3. Open the terminal/command prompt and move to the folder location.
 4. Activate the virtual environment if necessary, then `python run.py`. Minimum config of a conda environment is explained in the [Dependency](#dependency) section.
-5. If no error messages, 'ctrl' + 'click' the link appears (e.g. http://127.0.0.1:5000) on the terminal/command prompt.
-6. Edit to make sure the path to the submission folders is correct.
+5. If no error messages, 'ctrl' + 'click' the link appears (e.g. http://127.0.0.1:5000) on the terminal/command prompt. The application will start on your default browser.
 
 ```bash
-(Env_MarkingTool) C:\Users\QQ\Documents\marking_demo\MarkingTool>python run.py
+(Env_MarkingTool) C:\Users\QQ\Documents\coursework_marking\MarkingTool>python run.py
  * Serving Flask app 'app.app'
  * Debug mode: on
 WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
  * Running on http://127.0.0.1:5000
+ * Running on http://10.130.37.27:5000
 Press CTRL+C to quit
- * Restarting with stat
- * Debugger is active!
- * Debugger PIN: 126-070-293
 ```
 
 
