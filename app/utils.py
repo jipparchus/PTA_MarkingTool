@@ -175,18 +175,18 @@ class MarkingCriteria:
 class MarkSheet(MarkingCriteria):
     def __init__(self, path_submission):
         super().__init__(path_submission)
-        self._path_marksheet = os.path.join(self.path_submission, 'T1HW1_marksheet.csv')
+        self._path_marksheet = os.path.join(self.path_submission, 'HW1_marksheet.csv')
         self.df_ms = load_csv(self._path_marksheet, mode='marksheet')
 
     def get_marksheet(self, hw, sub_ids):
         if not os.path.exists(self._path_marksheet):
             lis_cps = [
                 f'checkpoint {e} [{e + 1}]' if (isinstance(i, (int, float)) and np.isnan(i)) else i
-                for e, i in enumerate(self.df_cps[f'HW{hw}'].values)
+                for e, i in enumerate(self.df_cps[f'HW{hw}'].dropna().values)
             ]
             lis_gpp = [
                 f'good programming practice{e} [{e + 1}]' if (isinstance(i, (int, float)) and np.isnan(i)) else i
-                for e, i in enumerate(self.df_gpp[f'HW{hw}'].values)
+                for e, i in enumerate(self.df_gpp[f'HW{hw}'].dropna().values)
             ]
             cols = lis_cps + lis_gpp + ['Feedback']
             self.df_ms = pd.DataFrame(columns=cols, index=sub_ids)
