@@ -9,7 +9,7 @@
         <div class="c">
             <top_ctrl class="h_split">
                 <p>
-                    Term <input class="usrinput" type="number" min=1 placeholder=1 size="1" value="{{ term | default('1') }}" name="term" /> Home Work #<input class="usrinput" type="number" min=1 placeholder=1 size="1" value="{{ hw | default('1') }}" name="hw"/>
+                    Home Work # <input class="usrinput" type="number" min=1 placeholder=1 size="1" value="{{ hw | default('1') }}" name="hw"/>
                     <input class="usrinput btn green" type="submit" value="confirm" formaction="/confirm_setups" />
                 </p>
                 {{ message }}

@@ -8,9 +8,9 @@
   <form action="?" method="POST">
     <div class="c">
       <top_ctrl class="h_split">
-        Term <input class="usrinput" type="number" min=1 placeholder=1 size="1" value="{{ term | default('1') }}" name="term" /> Home Work #<input class="usrinput" type="number" min=1 placeholder=1 size="1" value="{{ hw | default('1') }}" name="hw"/>
-        <input class="usrinput btn" type="submit" value="Add Column" formaction="/add_cols" />
-        <input class="usrinput btn" type="submit" value="Del Column" formaction="/del_cols" />
+        Home Work # <input class="usrinput" type="number" min=1 placeholder=1 size="1" value="{{ hw | default('1') }}" name="hw"/>
+        <input class="usrinput btn green" type="submit" value="Add" formaction="/add_cols" />
+        <input class="usrinput btn red" type="submit" value="Del" formaction="/del_cols" />
       </top_ctrl>
     </div>
 
@@ -31,8 +31,8 @@
           <input class="usrinput" type="number" min=1 placeholder=1 size="2" value="{{ cps_mark | default('1') }}" name="cps_mark"/>
         </p>
         <p>
-          <input class="usrinput btn" type="submit" value="Add" formaction="/cps_add"/>
-          <input class="usrinput btn" type="submit" value="Del" formaction="/cps_del"/>
+          <input class="usrinput btn green" type="submit" value="Add" formaction="/cps_add"/>
+          <input class="usrinput btn red" type="submit" value="Del" formaction="/cps_del"/>
         </p>
       </div>
       <div class="v_split short">
@@ -50,8 +50,8 @@
           <input class="usrinput" type="number" min=1 placeholder=1 size="2" value="{{ gpp_mark | default('1') }}"  name="gpp_mark"/>
         </p>
         <p>
-          <input class="usrinput btn" type="submit" value="Add" formaction="/gpp_add"/>
-          <input class="usrinput btn" type="submit" value="Del" formaction="/gpp_del"/>
+          <input class="usrinput btn green" type="submit" value="Add" formaction="/gpp_add"/>
+          <input class="usrinput btn red" type="submit" value="Del" formaction="/gpp_del"/>
         </p>
       </div>
     </div>

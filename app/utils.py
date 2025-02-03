@@ -132,20 +132,8 @@ class MarkingCriteria:
         self._df_cps, self._df_gpp = load_csv(self.path_submission, mode='marking_criteria')
 
     @property
-    def term(self):
-        return self._term
-
-    @property
     def hw(self):
         return self._hw
-
-    @term.setter
-    def term(self, value):
-        if value in [1, 2, 3]:
-            pass
-        else:
-            value = 1
-        self._term = value
 
     @hw.setter
     def hw(self, value):
@@ -153,7 +141,7 @@ class MarkingCriteria:
             pass
         else:
             value = 1
-        self._term = value
+        self._hw = value
 
     @property
     def df_cps(self):
@@ -190,15 +178,15 @@ class MarkSheet(MarkingCriteria):
         self._path_marksheet = os.path.join(self.path_submission, 'T1HW1_marksheet.csv')
         self.df_ms = load_csv(self._path_marksheet, mode='marksheet')
 
-    def get_marksheet(self, term, hw, sub_ids):
+    def get_marksheet(self, hw, sub_ids):
         if not os.path.exists(self._path_marksheet):
             lis_cps = [
                 f'checkpoint {e} [{e + 1}]' if (isinstance(i, (int, float)) and np.isnan(i)) else i
-                for e, i in enumerate(self.df_cps[f'T{term}HW{hw}'].values)
+                for e, i in enumerate(self.df_cps[f'HW{hw}'].values)
             ]
             lis_gpp = [
                 f'good programming practice{e} [{e + 1}]' if (isinstance(i, (int, float)) and np.isnan(i)) else i
-                for e, i in enumerate(self.df_gpp[f'T{term}HW{hw}'].values)
+                for e, i in enumerate(self.df_gpp[f'HW{hw}'].values)
             ]
             cols = lis_cps + lis_gpp + ['Feedback']
             self.df_ms = pd.DataFrame(columns=cols, index=sub_ids)
@@ -246,12 +234,12 @@ Markdown Report Generation
 """
 
 
-def get_dataframes(df_mark, term, hw, marking_criteria):
+def get_dataframes(df_mark, hw, marking_criteria):
     '''
     Divide the DataFrame into df for marks for code, good perogramming practice, and feedbacks
     '''
-    list_checkpoints = marking_criteria.df_cps[f'T{term}HW{hw}']
-    list_gpp = marking_criteria.df_gpp[f'T{term}HW{hw}']
+    list_checkpoints = marking_criteria.df_cps[f'HW{hw}']
+    list_gpp = marking_criteria.df_gpp[f'HW{hw}']
     # Main python code marks
     df_checkpoints = df_mark[df_mark.columns.intersection(list_checkpoints)]
     # Good Programming Practice mark
@@ -260,7 +248,7 @@ def get_dataframes(df_mark, term, hw, marking_criteria):
     return df_checkpoints, df_gpp, df_feedbacks
 
 
-def generate_summary(submission_id, df_marksheet, term, hw, marking_criteria, assessor, template_head, template_common, cmode='1'):
+def generate_summary(submission_id, df_marksheet, hw, marking_criteria, assessor, template_head, template_common, cmode='1'):
     """
     Generate markdown report for a chosen submission.
     cmode: Mode of syntax for markdown colourt text used in get_coloured_txt(). 1 by default.
@@ -271,7 +259,7 @@ def generate_summary(submission_id, df_marksheet, term, hw, marking_criteria, as
         '''
         1. Divide the spreadsheet into coding mark, good programming practice mark, feedback dataframes
         '''
-        df_checkpoints, df_gpp, df_feedbacks = get_dataframes(df_marksheet, term, hw, marking_criteria)
+        df_checkpoints, df_gpp, df_feedbacks = get_dataframes(df_marksheet, hw, marking_criteria)
 
         # If empty dataframe, return warnings
         if any([df_checkpoints.empty, df_gpp.empty]):

@@ -36,7 +36,6 @@ def get_form_info(attrs, mode='form_get', **kwargs):
     Return:
         list of values of each attribute
     """
-    defo_term = kwargs.pop('term', '1')
     defo_hw = kwargs.pop('hw', '1')
     defo_cps_idx = kwargs.pop('cps_idx', '0')
     defo_cps_txt = kwargs.pop('cps_txt', 'checkpoint')
@@ -61,7 +60,6 @@ def get_form_info(attrs, mode='form_get', **kwargs):
     defo_cmode_selected = kwargs.pop('cmode_selected', 'cmode2')
 
     dict_defo = {
-        'term': defo_term,
         'hw': defo_hw,
         'cps_idx': defo_cps_idx,
         'cps_txt': defo_cps_txt,
@@ -112,11 +110,10 @@ def mc_editing():
     config = read_config()
     path_sub, assessor = config['path_submission'], config['assessor']
     # GET only
-    attrs = ['term', 'hw', 'cps_idx', 'cps_txt', 'cps_mark', 'gpp_idx', 'gpp_txt', 'gpp_mark', 'message']
-    term, hw, cps_idx, cps_txt, cps_mark, gpp_idx, gpp_txt, gpp_mark, message = get_form_info(attrs, 'args_get')
+    attrs = ['hw', 'cps_idx', 'cps_txt', 'cps_mark', 'gpp_idx', 'gpp_txt', 'gpp_mark', 'message']
+    hw, cps_idx, cps_txt, cps_mark, gpp_idx, gpp_txt, gpp_mark, message = get_form_info(attrs, 'args_get')
     return render_template(
         'mc_editing.html',
-        term=term,
         hw=hw,
         cps_idx=cps_idx,
         cps_txt=cps_txt,
@@ -134,58 +131,56 @@ def mc_editing():
 
 @ app.route('/add_cols', methods=['POST'])
 def add_cols():
-    attrs = ['term', 'hw']
-    term, hw = get_form_info(attrs)
-    mc.df_add_cols(f'T{term}HW{hw}')
-    return redirect(url_for('mc_editing', term=term, hw=hw))
+    hw, = get_form_info(['hw'])
+    mc.df_add_cols(f'HW{hw}')
+    return redirect(url_for('mc_editing', hw=hw))
 
 
 @ app.route('/del_cols', methods=['POST'])
 def del_cols():
-    attrs = ['term', 'hw']
-    term, hw = get_form_info(attrs)
-    mc.df_del_cols(f'T{term}HW{hw}')
-    return redirect(url_for('mc_editing', term=term, hw=hw))
+    hw, = get_form_info(['hw'])
+    mc.df_del_cols(f'HW{hw}')
+    return redirect(url_for('mc_editing', hw=hw))
 
 
 @ app.route('/cps_add', methods=['POST'])
 def cps_add():
-    attrs = ['term', 'hw', 'cps_idx', 'cps_txt', 'cps_mark']
-    term, hw, cps_idx, cps_txt, cps_mark = get_form_info(attrs)
+    attrs = ['hw', 'cps_idx', 'cps_txt', 'cps_mark']
+    hw, cps_idx, cps_txt, cps_mark = get_form_info(attrs)
     df_cps = mc.df_cps
-    df_cps.at[int(cps_idx), f'T{term}HW{hw}'] = f'{cps_txt} [{cps_mark}]'
+    df_cps.at[int(cps_idx), f'HW{hw}'] = f'{cps_txt} [{cps_mark}]'
     mc.df_cps = df_cps
-    return redirect(url_for('mc_editing', term=term, hw=hw, cps_idx=cps_idx, cps_txt=cps_txt, cps_mark=cps_mark))
+    return redirect(url_for('mc_editing', hw=hw, cps_idx=cps_idx, cps_txt=cps_txt, cps_mark=cps_mark))
 
 
 @ app.route('/cps_del', methods=['POST'])
 def cps_del():
-    attrs = ['term', 'hw', 'cps_idx']
-    term, hw, cps_idx = get_form_info(attrs)
+    attrs = ['hw', 'cps_idx']
+    hw, cps_idx = get_form_info(attrs)
     df_cps = mc.df_cps
-    df_cps.at[int(cps_idx), f'T{term}HW{hw}'] = np.nan
+    df_cps.at[int(cps_idx), f'HW{hw}'] = np.nan
     mc.df_cps = df_cps
-    return redirect(url_for('mc_editing', term=term, hw=hw, cps_idx=cps_idx))
+    return redirect(url_for('mc_editing', hw=hw, cps_idx=cps_idx))
 
 
 @ app.route('/gpp_add', methods=['POST'])
 def gpp_add():
-    attrs = ['term', 'hw', 'gpp_idx', 'gpp_txt', 'gpp_mark']
-    term, hw, gpp_idx, gpp_txt, gpp_mark = get_form_info(attrs)
+    attrs = ['hw', 'gpp_idx', 'gpp_txt', 'gpp_mark']
+    hw, gpp_idx, gpp_txt, gpp_mark = get_form_info(attrs)
     df_gpp = mc.df_gpp
-    df_gpp.at[int(gpp_idx), f'T{term}HW{hw}'] = f'{gpp_txt} [{gpp_mark}]'
+    df_gpp.at[int(gpp_idx), f'HW{hw}'] = f'{gpp_txt} [{gpp_mark}]'
     mc.df_gpp = df_gpp
-    return redirect(url_for('mc_editing', term=term, hw=hw, gpp_idx=gpp_idx, gpp_txt=gpp_txt, gpp_mark=gpp_mark))
+    return redirect(url_for('mc_editing', hw=hw, gpp_idx=gpp_idx, gpp_txt=gpp_txt, gpp_mark=gpp_mark))
 
 
 @ app.route('/gpp_del', methods=['POST'])
 def gpp_del():
-    attrs = ['term', 'hw', 'gpp_idx']
-    term, hw, gpp_idx = get_form_info(attrs)
+    attrs = ['hw', 'gpp_idx']
+    hw, gpp_idx = get_form_info(attrs)
     df_gpp = mc.df_gpp
-    df_gpp.at[int(gpp_idx), f'T{term}HW{hw}'] = np.nan
+    df_gpp.at[int(gpp_idx), f'HW{hw}'] = np.nan
     mc.df_gpp = df_gpp
-    return redirect(url_for('mc_editing', term=term, hw=hw, gpp_idx=gpp_idx))
+    return redirect(url_for('mc_editing', hw=hw, gpp_idx=gpp_idx))
 
 
 @ app.route('/save', methods=['POST'])
@@ -214,8 +209,8 @@ def marking():
     config = read_config()
     path_sub, assessor, template_common = config['path_submission'], config['assessor'], config['template_common_mistake']
     # GET only
-    attrs = ['term', 'hw', 'sub_ids_str', 'sub_id_selected', 'points_str', 'point_selected', 'message', 'feedback', 'feedback_collection']
-    term, hw, sub_ids_str, sub_id_selected, points_str, point_selected, message, feedback, feedback_collection = get_form_info(attrs, 'args_get')
+    attrs = ['hw', 'sub_ids_str', 'sub_id_selected', 'points_str', 'point_selected', 'message', 'feedback', 'feedback_collection']
+    hw, sub_ids_str, sub_id_selected, points_str, point_selected, message, feedback, feedback_collection = get_form_info(attrs, 'args_get')
     # Convert strings into lists
     lis_sub_ids = string2list(sub_ids_str)
     lis_points = string2list(points_str)
@@ -228,7 +223,6 @@ def marking():
         feedback = feedback.replace('///', '\n\n')
     return render_template(
         'marking.html',
-        term=term,
         hw=hw,
         sub_ids=sub_ids_with_selection,
         sub_id_selected=sub_id_selected,
@@ -249,11 +243,11 @@ def confirm_setups():
     load_mc()
     config = read_config()
     path_sub, template_common = config['path_submission'], config['template_common_mistake']
-    attrs = ['term', 'hw', 'sub_id_selected', 'feedback_collection']
-    term, hw, sub_id_selected, feedback_collection = get_form_info(attrs, feedback_collection=['feedback 1', 'feedback 2'])
+    attrs = ['hw', 'sub_id_selected', 'feedback_collection']
+    hw, sub_id_selected, feedback_collection = get_form_info(attrs, feedback_collection=['feedback 1', 'feedback 2'])
 
-    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
-    ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
+    path_full = os.path.join(path_sub, f'HW{hw}')
+    ms.path_marksheet = os.path.join(path_sub, f'HW{hw}_marksheet.csv')
     try:
         message = path_full
         sub_ids = get_folders(path_full)
@@ -261,13 +255,12 @@ def confirm_setups():
         sub_ids = ['submission 1', 'submission 2', 'submission 3', 'etc.']
         message = '!! FileNotFound !!'
     # Load the marksheet for the particular homework (identified by 'term' and 'hw')
-    ms.get_marksheet(term, hw, sub_ids)
+    ms.get_marksheet(hw, sub_ids)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
     feedback_collection_str = list2string(feedback_collection)
     return redirect(url_for(
         'marking',
-        term=term,
         hw=hw,
         sub_ids_str=sub_ids_str,
         points_str=points_str,
@@ -281,10 +274,10 @@ def confirm_setups():
 @ app.route('/give_mark', methods=['POST'])
 def give_mark():
     path_sub = read_config()['path_submission']
-    attrs = ['term', 'hw', 'sub_id_selected', 'point_selected', 'mark_int', 'mark_dec']
-    term, hw, sub_id_selected, point_selected, mark_int, mark_dec = get_form_info(attrs)
+    attrs = ['hw', 'sub_id_selected', 'point_selected', 'mark_int', 'mark_dec']
+    hw, sub_id_selected, point_selected, mark_int, mark_dec = get_form_info(attrs)
 
-    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
+    path_full = os.path.join(path_sub, f'HW{hw}')
     sub_ids = get_folders(path_full)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
@@ -300,7 +293,6 @@ def give_mark():
 
     return redirect(url_for(
         'marking',
-        term=term,
         hw=hw,
         sub_ids_str=sub_ids_str,
         sub_id_selected=sub_id_selected,
@@ -313,10 +305,10 @@ def give_mark():
 def save_marksheet():
     #  --------- !!!! Is this necessary??? !!!! --------------------------
     path_sub = read_config()['path_submission']
-    attrs = ['term', 'hw', 'sub_id_selected', 'point_selected']
-    term, hw, sub_id_selected, point_selected = get_form_info(attrs)
+    attrs = ['hw', 'sub_id_selected', 'point_selected']
+    hw, sub_id_selected, point_selected = get_form_info(attrs)
 
-    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
+    path_full = os.path.join(path_sub, f'HW{hw}')
     sub_ids = get_folders(path_full)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
@@ -324,7 +316,6 @@ def save_marksheet():
     message = f'Marksheet has been saved to: {ms.path_marksheet}'
     return redirect(url_for(
         'marking',
-        term=term,
         hw=hw,
         sub_ids_str=sub_ids_str,
         sub_id_selected=sub_id_selected,
@@ -337,19 +328,18 @@ def save_marksheet():
 @ app.route('/load_feedback', methods=['POST'])
 def load_feedback():
     path_sub = read_config()['path_submission']
-    attrs = ['term', 'hw', 'sub_id_selected', 'point_selected', 'feedback']
-    term, hw, sub_id_selected, point_selected, feedback = get_form_info(attrs)
+    attrs = ['hw', 'sub_id_selected', 'point_selected', 'feedback']
+    hw, sub_id_selected, point_selected, feedback = get_form_info(attrs)
 
-    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
+    path_full = os.path.join(path_sub, f'HW{hw}')
     sub_ids = get_folders(path_full)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
     # Load feedbacks for the selected submission
     feedback = ms.df_ms.loc[sub_id_selected, 'Feedback']
-    message = f'Load: Feedback for submission by {sub_id_selected} for homework T{term}HW{hw}'
+    message = f'Load: Feedback for submission by {sub_id_selected} for homework HW{hw}'
     return redirect(url_for(
         'marking',
-        term=term,
         hw=hw,
         message=message,
         feedback=feedback,
@@ -363,10 +353,10 @@ def load_feedback():
 @ app.route('/add_feedback', methods=['POST'])
 def add_feedback():
     path_sub = read_config()['path_submission']
-    attrs = ['term', 'hw', 'sub_id_selected', 'point_selected', 'feedback']
-    term, hw, sub_id_selected, point_selected, feedback = get_form_info(attrs)
+    attrs = ['hw', 'sub_id_selected', 'point_selected', 'feedback']
+    hw, sub_id_selected, point_selected, feedback = get_form_info(attrs)
 
-    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
+    path_full = os.path.join(path_sub, f'HW{hw}')
     sub_ids = get_folders(path_full)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
@@ -380,10 +370,9 @@ def add_feedback():
     if feedback.endswith('///'):
         feedback = feedback[:-3]
     ms.df_ms.at[sub_id_selected, 'Feedback'] = feedback
-    message = f'Saved: Feedback for submission by {sub_id_selected} for homework T{term}HW{hw}'
+    message = f'Saved: Feedback for submission by {sub_id_selected} for homework HW{hw}'
     return redirect(url_for(
         'marking',
-        term=term,
         hw=hw,
         message=message,
         feedback=feedback,
@@ -397,21 +386,20 @@ def add_feedback():
 @ app.route('/save_common_mistakes', methods=['POST'])
 def save_common_mistakes():
     path_sub = read_config()['path_submission']
-    attrs = ['term', 'hw', 'sub_id_selected', 'point_selected', 'feedback', 'template_common']
-    term, hw, sub_id_selected, point_selected, feedback, template_common = get_form_info(attrs)
+    attrs = ['hw', 'sub_id_selected', 'point_selected', 'feedback', 'template_common']
+    hw, sub_id_selected, point_selected, feedback, template_common = get_form_info(attrs)
 
-    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
+    path_full = os.path.join(path_sub, f'HW{hw}')
     sub_ids = get_folders(path_full)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
     write_config(**{'template_common_mistake': template_common})
-    message = f'Saved: Common Mistakes for homework T{term}HW{hw}'
+    message = f'Saved: Common Mistakes for homework HW{hw}'
 
     # --------- !!!! Should or should not save the mark and feedback at the same time ?????? !!!! --------------------------
 
     return redirect(url_for(
         'marking',
-        term=term,
         hw=hw,
         message=message,
         feedback=feedback,
@@ -435,8 +423,8 @@ def reporting():
     config = read_config()
     path_sub, assessor, col_styles = config['path_submission'], config['assessor'], config['col_styles']
     # GET only
-    attrs = ['term', 'hw', 'sub_ids_str', 'sub_id_selected', 'message', 'summary', 'template_head', 'template_common', 'cmode_selected']
-    term, hw, sub_ids_str, sub_id_selected, message, summary, template_head, template_common, cmode_selected = get_form_info(attrs, 'args_get')
+    attrs = ['hw', 'sub_ids_str', 'sub_id_selected', 'message', 'summary', 'template_head', 'template_common', 'cmode_selected']
+    hw, sub_ids_str, sub_id_selected, message, summary, template_head, template_common, cmode_selected = get_form_info(attrs, 'args_get')
     # Convert strings into lists
     lis_sub_ids = string2list(sub_ids_str)
     # Marksheet
@@ -446,7 +434,6 @@ def reporting():
 
     return render_template(
         'reporting.html',
-        term=term,
         hw=hw,
         sub_ids=sub_ids_with_selection,
         sub_id_selected=sub_id_selected,
@@ -467,11 +454,11 @@ def reporting():
 def confirm_homework():
     path_sub = read_config()['path_submission']
     load_mc()
-    attrs = ['term', 'hw', 'sub_id_selected', 'cmode_selected']
-    term, hw, sub_id_selected, cmode_selected = get_form_info(attrs)
+    attrs = ['hw', 'sub_id_selected', 'cmode_selected']
+    hw, sub_id_selected, cmode_selected = get_form_info(attrs)
 
-    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
-    ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
+    path_full = os.path.join(path_sub, f'HW{hw}')
+    ms.path_marksheet = os.path.join(path_sub, f'HW{hw}_marksheet.csv')
     try:
         message = path_full
         sub_ids = get_folders(path_full)
@@ -479,12 +466,11 @@ def confirm_homework():
         sub_ids = ['submission 1', 'submission 2', 'submission 3', 'etc.']
         message = '!! FileNotFound !!'
     # Load the marksheet for the particular homework (identified by 'term' and 'hw')
-    ms.get_marksheet(term, hw, sub_ids)
+    ms.get_marksheet(hw, sub_ids)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
     return redirect(url_for(
         'reporting',
-        term=term,
         hw=hw,
         sub_ids_str=sub_ids_str,
         sub_id_selected=sub_id_selected,
@@ -497,11 +483,11 @@ def confirm_homework():
 def confirm_sub_id():
     load_mc()
     path_sub = read_config()['path_submission']
-    attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'template_common', 'cmode_selected']
-    term, hw, sub_id_selected, template_head, template_common, cmode_selected = get_form_info(attrs)
+    attrs = ['hw', 'sub_id_selected', 'template_head', 'template_common', 'cmode_selected']
+    hw, sub_id_selected, template_head, template_common, cmode_selected = get_form_info(attrs)
 
-    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
-    ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
+    path_full = os.path.join(path_sub, f'HW{hw}')
+    ms.path_marksheet = os.path.join(path_sub, f'HW{hw}_marksheet.csv')
     try:
         message = path_full
         sub_ids = get_folders(path_full)
@@ -509,12 +495,11 @@ def confirm_sub_id():
         sub_ids = ['submission 1', 'submission 2', 'submission 3', 'etc.']
         message = '!! FileNotFound !!'
     # Load the marksheet for the particular homework (identified by 'term' and 'hw')
-    ms.get_marksheet(term, hw, sub_ids)
+    ms.get_marksheet(hw, sub_ids)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
     return redirect(url_for(
         'reporting',
-        term=term,
         hw=hw,
         sub_ids_str=sub_ids_str,
         sub_id_selected=sub_id_selected,
@@ -527,12 +512,12 @@ def confirm_sub_id():
 
 @app.route('/update_template_head', methods=['POST'])
 def update_template_head():
-    attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'cmode_selected']
-    term, hw, sub_id_selected, template_head, cmode_selected = get_form_info(attrs)
+    attrs = ['hw', 'sub_id_selected', 'template_head', 'cmode_selected']
+    hw, sub_id_selected, template_head, cmode_selected = get_form_info(attrs)
 
     path_sub = read_config()['path_submission']
-    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
-    ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
+    path_full = os.path.join(path_sub, f'HW{hw}')
+    ms.path_marksheet = os.path.join(path_sub, f'HW{hw}_marksheet.csv')
     try:
         message = path_full
         sub_ids = get_folders(path_full)
@@ -540,14 +525,13 @@ def update_template_head():
         sub_ids = ['submission 1', 'submission 2', 'submission 3', 'etc.']
         message = '!! FileNotFound !!'
     # Load the marksheet for the particular homework (identified by 'term' and 'hw')
-    ms.get_marksheet(term, hw, sub_ids)
+    ms.get_marksheet(hw, sub_ids)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
     write_config(**{'template_head': template_head})
 
     return redirect(url_for(
         'reporting',
-        term=term,
         hw=hw,
         sub_ids_str=sub_ids_str,
         sub_id_selected=sub_id_selected,
@@ -563,11 +547,11 @@ def generate():
     config = read_config()
     path_sub, assessor, template_common = config['path_submission'], config['assessor'], config['template_common_mistake']
 
-    attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'cmode_selected']
-    term, hw, sub_id_selected, template_head, cmode_selected = get_form_info(attrs)
+    attrs = ['hw', 'sub_id_selected', 'template_head', 'cmode_selected']
+    hw, sub_id_selected, template_head, cmode_selected = get_form_info(attrs)
 
-    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
-    ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
+    path_full = os.path.join(path_sub, f'HW{hw}')
+    ms.path_marksheet = os.path.join(path_sub, f'HW{hw}_marksheet.csv')
     try:
         message = path_full
         sub_ids = get_folders(path_full)
@@ -575,14 +559,13 @@ def generate():
         sub_ids = ['submission 1', 'submission 2', 'submission 3', 'etc.']
         message = '!! FileNotFound !!'
     # Load the marksheet for the particular homework (identified by 'term' and 'hw')
-    ms.get_marksheet(term, hw, sub_ids)
+    ms.get_marksheet(hw, sub_ids)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
-    summary = generate_summary(sub_id_selected, ms.df_ms, term, hw, mc, assessor, template_head, template_common, cmode_selected[5:])
+    summary = generate_summary(sub_id_selected, ms.df_ms, hw, mc, assessor, template_head, template_common, cmode_selected[5:])
 
     return redirect(url_for(
         'reporting',
-        term=term,
         hw=hw,
         sub_ids_str=sub_ids_str,
         sub_id_selected=sub_id_selected,
@@ -601,21 +584,21 @@ def ipynb2pdf_all():
     Want to show real time log on the screen using socketIO.
     So far, just disable all the buttons while executing the command. If error, recommend to brows back.
     """
-    attrs = ['term', 'hw', 'sub_id_selected', 'template_head', 'cmode_selected']
-    term, hw, sub_id_selected, template_head, cmode_selected = get_form_info(attrs)
+    attrs = ['hw', 'sub_id_selected', 'template_head', 'cmode_selected']
+    hw, sub_id_selected, template_head, cmode_selected = get_form_info(attrs)
 
-    path_full = os.path.join(path_sub, f'T{term}HW{hw}')
-    ms.path_marksheet = os.path.join(path_sub, f'T{term}HW{hw}_marksheet.csv')
+    path_full = os.path.join(path_sub, f'HW{hw}')
+    ms.path_marksheet = os.path.join(path_sub, f'HW{hw}_marksheet.csv')
     try:
         sub_ids = get_folders(path_full)
     except FileNotFoundError:
         sub_ids = ['submission 1', 'submission 2', 'submission 3', 'etc.']
     # Load the marksheet for the particular homework (identified by 'term' and 'hw')
-    ms.get_marksheet(term, hw, sub_ids)
+    ms.get_marksheet(hw, sub_ids)
     sub_ids_str, points_str = list2string_routine(sub_ids, ms)
 
     # Converting the files. Somehow need to output messages...
-    ipynb2pdf(term, hw, multiprocess=True)
+    ipynb2pdf(hw, multiprocess=True)
     """
     multiprocessing, pool size 3, run: 91, 75 s
     multiprocessing, pool size 16, run: 40 s
@@ -626,7 +609,6 @@ def ipynb2pdf_all():
 
     return redirect(url_for(
         'reporting',
-        term=term,
         hw=hw,
         sub_ids_str=sub_ids_str,
         sub_id_selected=sub_id_selected,
@@ -638,7 +620,7 @@ def ipynb2pdf_all():
     ))
 
 
-def ipynb2pdf(term, hw, **kwargs):
+def ipynb2pdf(hw, **kwargs):
     """
     Convert ALL the .ipynb files into .pdf files. If multiprocessing, creaste queue, and start the processes.
     Parameters:
@@ -652,7 +634,7 @@ def ipynb2pdf(term, hw, **kwargs):
     ts = time.time()
     config = read_config()
     condaenv = config['condaenv']
-    path_hw = os.path.join(config['path_submission'], f'T{term}HW{hw}')
+    path_hw = os.path.join(config['path_submission'], f'HW{hw}')
     lis_direc = os.listdir(path_hw)
 
     if mprocess:
